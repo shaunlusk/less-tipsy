@@ -1,0 +1,11 @@
+    interface IFooProps extends React.Props<Foo> {
+        // ...
+    }
+
+    interface IFooState {
+        // ...
+    }
+
+    class Foo extends React.Component<IFooProps, IFooState> {
+        // ...
+    }

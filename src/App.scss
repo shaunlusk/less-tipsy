@@ -1,0 +1,12 @@
+@import './styles/colors.scss';
+@import './styles/tabs.scss';
+
+.App {
+  text-align: center;
+  background-color: $background-color;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
+  color: white;
+}
