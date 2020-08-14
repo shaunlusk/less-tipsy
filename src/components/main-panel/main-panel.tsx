@@ -3,12 +3,13 @@ import { Tabs } from '../tabs/tabs';
 import { Tab } from '../tabs/tab';
 import { SettingsPanel } from '../settings-panel/settings-panel';
 import { HistoryPanel } from '../history-panel/history-panel';
+import { SettingsService } from '../../services/settings-service';
 import './main-panel.scss';
 
 class MainPanel extends React.Component<any, any> {
   private tabs: Tab[] = [
     new Tab({name:'Session', content:<div>Session</div>}),
-    new Tab({name:'Settings', content:<SettingsPanel></SettingsPanel>}),
+    new Tab({name:'Settings', content:<SettingsPanel settingsService={SettingsService.getInstance()}></SettingsPanel>}),
     new Tab({name:'History', content:<HistoryPanel></HistoryPanel>}),
   ];
 

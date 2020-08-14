@@ -1,26 +1,124 @@
 import * as React from 'react';
 import './settings-panel.scss';
+import { ISettingsService } from '../../services/settings-service';
 
-class SettingsPanel extends React.Component<any, any> {
+interface ISettingsPanelProps {
+  settingsService: ISettingsService;
+}
+
+interface ISettingsPanelState {
+  sessionMax: string;
+  weeklyMax: string;
+  units: string;
+  hours: string;
+}
+
+class SettingsPanel extends React.Component<ISettingsPanelProps, ISettingsPanelState> {
+  constructor(props: ISettingsPanelProps) {
+    super(props);
+    this.state = {
+      weeklyMax: props.settingsService.weeklyMax.toString(),
+      sessionMax: props.settingsService.sessionMax.toString(),
+      units: props.settingsService.units.toString(),
+      hours: props.settingsService.hours.toString()
+    };
+  }
+
+  handleChangeSessionMax(value: string) {
+    this.setState({
+      sessionMax: value
+    }, () => {
+      if (value && value.trim().length) {
+        this.props.settingsService.sessionMax = parseInt(value);
+      }
+    });
+  }
+
+  handleChangeWeeklyMax(value: string) {
+    this.setState({
+      weeklyMax: value
+    }, () => () => {
+      if (value && value.trim().length) {
+        this.props.settingsService.sessionMax = parseInt(value);
+      }
+    });
+  }
+
+  handleChangeUnits(value: string) {
+    this.setState({
+      units: value
+    }, () => () => {
+      if (value && value.trim().length) {
+        this.props.settingsService.sessionMax = parseInt(value);
+      }
+    });
+  }
+
+  handleChangeHours(value: string) {
+    this.setState({
+      hours: value
+    }, () => () => {
+      if (value && value.trim().length) {
+        this.props.settingsService.sessionMax = parseInt(value);
+      }
+    });
+  }
+
   render() {
     return <div className="settings-container">
-      <h3>Settings Panel</h3>
+      <h3>Settings</h3>
       <div className="settings-input max-per-session">
         <div className="settings-label">Max Per Session</div>
-        <input type="text" size={2} maxLength={2} name="maxPerSessionInput"></input>
+        <input 
+          type="number" 
+          value={this.state.sessionMax} 
+          size={5} 
+          maxLength={5} 
+          min={0.1}
+          max={12}
+          name="maxPerSessionInput"
+          onChange={e => this.handleChangeSessionMax(e.target.value)}
+        ></input>
       </div>
       <div className="settings-input max-per-week">
         <div className="settings-label">Max Per Week</div>
-        <input type="text" size={2} maxLength={2} name="maxPerWeekInput"></input>
+        <input 
+          type="number" 
+          value={this.state.weeklyMax} 
+          size={5} 
+          maxLength={5}
+          min={0.1}
+          max={49}
+          name="maxPerWeekInput"
+          onChange={e => this.handleChangeWeeklyMax(e.target.value)}
+        ></input>
       </div>
       <h4>Session Rate</h4>
       <div className="settings-input session-rate-units">
         <div className="settings-label">Units...</div>
-        <input type="text" size={2} maxLength={2} name="units"></input>
+        <input 
+          type="number" 
+          value={this.state.units} 
+          size={5} 
+          maxLength={5} 
+          min={0.1}
+          max={12}
+          name="units"
+          onChange={e => this.handleChangeUnits(e.target.value)}
+        ></input>
         </div>
-      <div className="settings-input session-rate-minutes">
-        <div className="settings-label">...Per Hour</div>
-        <input type="text" size={2} maxLength={2} name="minutes"></input>
+      <div className="settings-input session-rate-hour">
+        <div className="settings-label">...Per Hours</div>
+        <input 
+          type="number" 
+          value={this.state.hours} 
+          size={5} 
+          maxLength={5}
+          min={0.1}
+          max={12} 
+          name="hours"
+          onChange={e => this.handleChangeHours(e.target.value)}
+        ></input>
       </div>
     </div>
   }
