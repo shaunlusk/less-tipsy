@@ -1,4 +1,4 @@
 export enum VolumeUnit {
-  Ounces,
-  Milliliters
+  Ounces = "Ounces",
+  Milliliters = "Milliliter"
 }

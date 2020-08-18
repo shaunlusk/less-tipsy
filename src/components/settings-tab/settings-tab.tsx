@@ -29,7 +29,7 @@ class SettingsTab extends React.Component<ISettingsTabProps, ISettingsTabState> 
       sessionMax: value
     }, () => {
       if (value && value.trim().length) {
-        this.props.settingsService.sessionMax = parseInt(value);
+        this.props.settingsService.sessionMax = parseFloat(value);
       }
     });
   }
@@ -39,7 +39,7 @@ class SettingsTab extends React.Component<ISettingsTabProps, ISettingsTabState> 
       weeklyMax: value
     }, () => () => {
       if (value && value.trim().length) {
-        this.props.settingsService.sessionMax = parseInt(value);
+        this.props.settingsService.sessionMax = parseFloat(value);
       }
     });
   }
@@ -49,7 +49,7 @@ class SettingsTab extends React.Component<ISettingsTabProps, ISettingsTabState> 
       units: value
     }, () => () => {
       if (value && value.trim().length) {
-        this.props.settingsService.sessionMax = parseInt(value);
+        this.props.settingsService.sessionMax = parseFloat(value);
       }
     });
   }
@@ -59,7 +59,7 @@ class SettingsTab extends React.Component<ISettingsTabProps, ISettingsTabState> 
       hours: value
     }, () => () => {
       if (value && value.trim().length) {
-        this.props.settingsService.sessionMax = parseInt(value);
+        this.props.settingsService.sessionMax = parseFloat(value);
       }
     });
   }

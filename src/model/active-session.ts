@@ -1,20 +1,42 @@
 import { Drink } from "./drink";
 
-export class ActiveSession {
+export interface IActiveSession {
+  addDrink(drink: Drink): void;
+  readonly lastDrink: Drink | null;
+  readonly date: Date;
+  readonly unitsConsumed: number;
+  readonly sessionMax: number;
+  readonly sessionRemaining: number;
+  readonly hourlyRate: number;
+  readonly weeklyMax: number;
+  readonly rollingWeeklyTotal: number;
+  readonly rollingWeeklyRemaining: number;
+  readonly isHourlyRateOk: boolean;
+  readonly isSessionOk: boolean;
+  readonly isWeeklyOk: boolean;
+}
+
+export class ActiveSession implements IActiveSession {
   private _drinks: Drink[] = [];
   private _sessionMax: number;
   private _weeklyMax: number;
-  private _rollingWeekly: number;
+  private _rollingWeeklyTotal: number;
   private _date: Date = new Date();
+  private _targetHourlyRate: number;
 
-  constructor(sessionMax: number, weeklyMax: number, rollingWeekly: number) {
+  constructor(sessionMax: number, weeklyMax: number, rollingWeeklyTotal: number, targetHourlyRate: number) {
     this._sessionMax = sessionMax;
     this._weeklyMax = weeklyMax;
-    this._rollingWeekly = rollingWeekly;
+    this._rollingWeeklyTotal = rollingWeeklyTotal;
+    this._targetHourlyRate = targetHourlyRate;
   }
 
   public addDrink(drink: Drink): void {
     this._drinks.push(drink);
+  }
+  
+  public get lastDrink(): Drink | null {
+    return this._drinks.length > 0 ? this._drinks[this._drinks.length - 1] : null;
   }
 
   public get date(): Date {
@@ -29,19 +51,45 @@ export class ActiveSession {
     return this._sessionMax;
   }
   
+  public get sessionRemaining(): number {
+    const remaining = this._sessionMax - this.unitsConsumed;
+    return remaining < 0 ? 0 : remaining;
+  }
+
+  public get hourlyRate(): number {
+    if (this._drinks.length === 0) {
+      return 0;
+    }
+    const startTime = this._drinks[0].time;
+    const currentTime = new Date();
+    // Add target hourly rate to prevent huge hourly rates and division by zero.
+    const lastUnitAllowance = this.lastDrink!.alcoholUnits / this._targetHourlyRate;
+    const timeDiff = (currentTime.valueOf() - startTime.valueOf()) / 1000 / 60 / 60 + lastUnitAllowance;
+    return this.unitsConsumed / timeDiff;
+  }
+
   public get weeklyMax(): number {
     return this._weeklyMax;
   }
 
-  public get rollingWeekly(): number {
-    return this._rollingWeekly + this.unitsConsumed;
+  public get rollingWeeklyTotal(): number {
+    return this._rollingWeeklyTotal + this.unitsConsumed;
+  }
+
+  public get rollingWeeklyRemaining(): number {
+    const remaining = this._weeklyMax - this.rollingWeeklyTotal;
+    return remaining < 0 ? 0 : remaining; 
   }
   
+  public get isHourlyRateOk(): boolean {
+    return this.hourlyRate <= this._targetHourlyRate;
+  }
+
   public get isSessionOk(): boolean {
     return this.unitsConsumed <= this._sessionMax;
   }
 
   public get isWeeklyOk(): boolean {
-    return this.rollingWeekly <= this._weeklyMax;
+    return this.rollingWeeklyTotal <= this._weeklyMax;
   }
 }
