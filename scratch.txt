@@ -1,11 +1,13 @@
-    interface IFooProps extends React.Props<Foo> {
-        // ...
-    }
+todo:
 
-    interface IFooState {
-        // ...
-    }
+inputs with validation
+prevent saving settings if inputs invalid
 
-    class Foo extends React.Component<IFooProps, IFooState> {
-        // ...
-    }
+prevent creating session if settings not valid?
+
+nullable time display component - show times on session tab
+
+auto convert volume on unit change
+
+
+

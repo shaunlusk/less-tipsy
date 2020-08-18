@@ -19,7 +19,7 @@ class SettingsTab extends React.Component<ISettingsTabProps, ISettingsTabState> 
     this.state = {
       weeklyMax: props.settingsService.weeklyMax.toString(),
       sessionMax: props.settingsService.sessionMax.toString(),
-      units: props.settingsService.units.toString(),
+      units: props.settingsService.alcoholUnits.toString(),
       hours: props.settingsService.hours.toString()
     };
   }

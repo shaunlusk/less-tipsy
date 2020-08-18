@@ -14,6 +14,7 @@ export interface IActiveSession {
   readonly isHourlyRateOk: boolean;
   readonly isSessionOk: boolean;
   readonly isWeeklyOk: boolean;
+  readonly nextDrinkTime: Date | null;
 }
 
 export class ActiveSession implements IActiveSession {
@@ -91,5 +92,12 @@ export class ActiveSession implements IActiveSession {
 
   public get isWeeklyOk(): boolean {
     return this.rollingWeeklyTotal <= this._weeklyMax;
+  }
+
+  public get nextDrinkTime(): Date | null {
+    if (!this.lastDrink) {
+      return null;
+    }
+    return new Date((this.lastDrink!.alcoholUnits / this._targetHourlyRate) * 60 * 60 * 1000);
   }
 }

@@ -3,8 +3,9 @@ import { ILocalStorageService, LocalStorageService } from "./local-storage-servi
 export interface ISettingsService {
   weeklyMax: number;
   sessionMax: number;
-  units: number;
+  alcoholUnits: number;
   hours: number;
+  consumptionRate: number;
 }
 
 class SettingsService implements ISettingsService {
@@ -12,17 +13,16 @@ class SettingsService implements ISettingsService {
   public readonly WeeklyMaxStorageKey = 'WeeklyMax';
   public readonly SessionMaxStorageKey = 'SessionMax';
   public readonly HoursStorageKey = 'HoursRate';
-  public readonly UnitsStorageKey = 'UnitRate';
+  public readonly AlcoholUnitsStorageKey = 'AlcoholUnitsRate';
   public readonly DefaultWeeklyMax = 14;
-  public readonly DefaultSessionMax = 2;
+  public readonly DefaultSessionMax = 4;
   public readonly DefaultHours = 1;
-  public readonly DefaultUnits = 1;
+  public readonly DefaultAlcoholUnits = 2;
   private _weeklyMax!: number;
   private _sessionMax!: number;
-  private _units!: number;
+  private _alcoholUnits!: number;
   private _hours!: number;
   private _storageService: ILocalStorageService;
-
 
   private constructor(storageService: ILocalStorageService) {
     this._storageService = storageService;
@@ -33,8 +33,8 @@ class SettingsService implements ISettingsService {
     const sessionMax = this._storageService.getNumber(this.SessionMaxStorageKey) || this.DefaultSessionMax;
     this.sessionMax = sessionMax;
 
-    const units = this._storageService.getNumber(this.UnitsStorageKey) || this.DefaultUnits;
-    this.units = units;
+    const units = this._storageService.getNumber(this.AlcoholUnitsStorageKey) || this.DefaultAlcoholUnits;
+    this.alcoholUnits = units;
 
     const hours = this._storageService.getNumber(this.HoursStorageKey) || this.DefaultHours;
     this.hours = hours;
@@ -74,14 +74,18 @@ class SettingsService implements ISettingsService {
     this._storageService.put(this.HoursStorageKey, value);
   }
 
-  get units(): number {
-    return this._units;
+  get alcoholUnits(): number {
+    return this._alcoholUnits;
   }
 
-  set units(value: number) {
-    if (value === this._units) return;
-    this._units = value;
-    this._storageService.put(this.UnitsStorageKey, value);
+  set alcoholUnits(value: number) {
+    if (value === this._alcoholUnits) return;
+    this._alcoholUnits = value;
+    this._storageService.put(this.AlcoholUnitsStorageKey, value);
+  }
+
+  get consumptionRate(): number {
+    return this.alcoholUnits / this.hours;
   }
 }
 
