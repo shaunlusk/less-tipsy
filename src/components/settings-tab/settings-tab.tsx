@@ -37,9 +37,9 @@ class SettingsTab extends React.Component<ISettingsTabProps, ISettingsTabState> 
   handleChangeWeeklyMax(value: string) {
     this.setState({
       weeklyMax: value
-    }, () => () => {
+    }, () => {
       if (value && value.trim().length) {
-        this.props.settingsService.sessionMax = parseFloat(value);
+        this.props.settingsService.weeklyMax = parseFloat(value);
       }
     });
   }
@@ -47,9 +47,9 @@ class SettingsTab extends React.Component<ISettingsTabProps, ISettingsTabState> 
   handleChangeUnits(value: string) {
     this.setState({
       units: value
-    }, () => () => {
+    }, () => {
       if (value && value.trim().length) {
-        this.props.settingsService.sessionMax = parseFloat(value);
+        this.props.settingsService.alcoholUnits = parseFloat(value);
       }
     });
   }
@@ -57,9 +57,9 @@ class SettingsTab extends React.Component<ISettingsTabProps, ISettingsTabState> 
   handleChangeHours(value: string) {
     this.setState({
       hours: value
-    }, () => () => {
+    }, () => {
       if (value && value.trim().length) {
-        this.props.settingsService.sessionMax = parseFloat(value);
+        this.props.settingsService.hours = parseFloat(value);
       }
     });
   }

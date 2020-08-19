@@ -2,49 +2,34 @@ import * as React from 'react';
 import { Tab } from './tab';
 
 export interface ITabsProps {
-  activeTabName?: string;
-  tabs: Tab[];
+  activeTabLabel?: string;
+  children: React.ReactComponentElement<typeof Tab>[];
+  activeTabChanged?(label: string, tab?: React.ReactComponentElement<typeof Tab>): void;
 }
 
-interface ITabsState {
-  activeTab: Tab;
-}
+class Tabs extends React.Component<ITabsProps, any> {
 
-const defaultTab = new Tab({name:'Tab', content:(<span></span>)});
-
-class Tabs extends React.Component<ITabsProps, ITabsState> {
-  constructor(props: ITabsProps) {
-    super(props);
-    if (props.tabs.length === 0) {
-      props.tabs.push(defaultTab);
+  setActiveTab(tab: React.ReactComponentElement<typeof Tab>) {
+    if (this.props.activeTabChanged) {
+      this.props.activeTabChanged(tab.props.label, tab);
     }
-
-    this.state = {
-      activeTab : props.activeTabName 
-      ? (props.tabs.find(tab => tab.name === props.activeTabName) ?? props.tabs[0])
-      : props.tabs[0]
-    }
-  }
-
-  setActiveTab(tab: Tab) {
-    this.setState({
-      activeTab: tab
-    });
   }
 
   public render() {
-    
+    const activeTab = this.props.activeTabLabel 
+      ? (this.props.children.find(tabEl => tabEl.props.label === this.props.activeTabLabel) ?? this.props.children[0])
+      : this.props.children[0];
     return <div className="tab-container">
       <div className="tab-headers">
-        {this.props.tabs.map(tab => 
-          <span key={"tab-header-" + tab.name} className={"tab-header " + (tab === this.state.activeTab ? "active-tab-header" : "")}
+        {this.props.children.map(tab => 
+          <span key={"tab-header-" + tab.props.label} className={"tab-header " + (tab === activeTab ? "active-tab-header" : "")}
             onClick={() => this.setActiveTab(tab)}
           >
-            {tab.name}
+            {tab.props.label}
           </span>
         )}
       </div>
-      <div className="tab-content">{this.state.activeTab.content}</div>
+      {activeTab}
     </div>
   }
 }

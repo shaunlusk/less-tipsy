@@ -9,5 +9,6 @@ nullable time display component - show times on session tab
 
 auto convert volume on unit change
 
+enable/disable tab
 
 

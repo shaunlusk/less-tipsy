@@ -3,6 +3,7 @@ import { VolumeUnit } from '../../model/unit';
 import { Drink } from '../../model/drink';
 
 export interface ISessionTabProps {
+  addDrink(drink: Drink): void;
   lastDrink: Date | null;
   nextDrink: Date | null;
   sessionTotal: number;
@@ -50,7 +51,7 @@ export class SessionTab extends React.Component<ISessionTabProps, ISessionTabSta
     const volume = parseFloat(this.state.currentVolume);
     const abv = parseFloat(this.state.currentAbv);
     const drink = new Drink(volume, this.state.currentVolumeUnit, abv);
-    // this.props.activeSession.addDrink(drink);
+    this.props.addDrink(drink);
   }
 
   public formIsValid() {
@@ -95,12 +96,12 @@ export class SessionTab extends React.Component<ISessionTabProps, ISessionTabSta
           onChange={e => this.handleChangeAbv(e.target.value)}
         ></input>
       <div>
-        <button>Add</button>
+        <button onClick={() => this.addDrink()}>Add</button>
       </div>
       <div>Last Drink</div>
-      <div>{this.props.lastDrink}</div>
+      <div>Last Drink Placeholder</div>
       <div>Next Drink</div>
-      <div>{this.props.nextDrink}</div>
+      <div>Next Drink Placeholder</div>
       <div>Session Total</div>
       <div>{this.props.sessionTotal}</div>
       <div>Session Remaining</div>
