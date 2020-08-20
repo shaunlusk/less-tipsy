@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { VolumeUnit } from '../../model/unit';
-import { Drink } from '../../model/drink';
+import { VolumeUnit } from '../../../model/unit';
+import { Drink } from '../../../model/drink';
 
-export interface ISessionTabProps {
+export interface IActiveSessionPanelProps {
   addDrink(drink: Drink): void;
-  lastDrink: Date | null;
-  nextDrink: Date | null;
+  lastDrink: Drink | null;
+  nextDrinkTime: Date | null;
   sessionTotal: number;
   sessionRemaining: number;
   hourlyRate: number;
@@ -16,14 +16,14 @@ export interface ISessionTabProps {
   lastVolumeUnit: VolumeUnit;
 }
 
-interface ISessionTabState {
+interface IActiveSessionPanelState {
   currentVolume: string;
   currentVolumeUnit: VolumeUnit;
   currentAbv: string;
 }
 
-export class SessionTab extends React.Component<ISessionTabProps, ISessionTabState> {
-  constructor(props: ISessionTabProps) {
+export class ActiveSessionPanel extends React.Component<IActiveSessionPanelProps, IActiveSessionPanelState> {
+  constructor(props: IActiveSessionPanelProps) {
     super(props);
 
     this.state = {

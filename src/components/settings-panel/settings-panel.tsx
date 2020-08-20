@@ -1,20 +1,20 @@
 import * as React from 'react';
 import { ISettingsService } from '../../services/settings-service';
-import './settings-tab.scss';
+import './settings-panel.scss';
 
-interface ISettingsTabProps {
+interface ISettingsPanelProps {
   settingsService: ISettingsService;
 }
 
-interface ISettingsTabState {
+interface ISettingsPanelState {
   sessionMax: string;
   weeklyMax: string;
   units: string;
   hours: string;
 }
 
-class SettingsTab extends React.Component<ISettingsTabProps, ISettingsTabState> {
-  constructor(props: ISettingsTabProps) {
+class SettingsPanel extends React.Component<ISettingsPanelProps, ISettingsPanelState> {
+  constructor(props: ISettingsPanelProps) {
     super(props);
     this.state = {
       weeklyMax: props.settingsService.weeklyMax.toString(),
@@ -124,4 +124,4 @@ class SettingsTab extends React.Component<ISettingsTabProps, ISettingsTabState> 
   }
 }
 
-export { SettingsTab };
+export { SettingsPanel };

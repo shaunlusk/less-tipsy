@@ -1,19 +1,20 @@
 import * as React from 'react';
 import { Tabs } from '../tabs/tabs';
 import { Tab } from '../tabs/tab';
-import { SettingsTab } from '../settings-tab/settings-tab';
-import { HistoryTab } from '../history-tab/history-tab';
+import { SettingsPanel } from '../settings-panel/settings-panel';
+import { HistoryPanel } from '../history-panel/history-panel';
 import { SettingsService } from '../../services/settings-service';
-import { SessionTab } from '../session-tab/session-tab';
-import './main-panel.scss';
+import { ActiveSessionPanel } from '../session-panel/active-session-panel/active-session-panel';
 import { IActiveSession, ActiveSession } from '../../model/active-session';
 import { VolumeUnit } from '../../model/unit';
 import { Drink } from '../../model/drink';
+import { NoSessionPanel } from '../session-panel/no-session-panel/no-session-panel';
+import './main-panel.scss';
 
 interface IMainPanelState {
   activeTabLabel: string;
-  lastDrink: Date | null; 
-  nextDrink: Date | null;
+  lastDrink: Drink | null; 
+  nextDrinkTime: Date | null;
   sessionTotal: number;
   sessionRemaining: number;
   hourlyRate: number;
@@ -37,8 +38,8 @@ class MainPanel extends React.Component<any, IMainPanelState> {
 
     this.state = {
       activeTabLabel: 'Session',
-      lastDrink: this.activeSession.lastDrink ? this.activeSession.lastDrink.time : null, 
-      nextDrink: this.activeSession.nextDrinkTime,
+      lastDrink: this.activeSession.lastDrink, 
+      nextDrinkTime: this.activeSession.nextDrinkTime,
       sessionTotal: this.activeSession.unitsConsumed,
       sessionRemaining: this.activeSession.sessionRemaining,
       hourlyRate: this.activeSession.hourlyRate,
@@ -61,8 +62,8 @@ class MainPanel extends React.Component<any, IMainPanelState> {
 
   private updateState(): void {
     this.setState({
-      lastDrink: this.activeSession.lastDrink ? this.activeSession.lastDrink.time : null, 
-      nextDrink: this.activeSession.nextDrinkTime,
+      lastDrink: this.activeSession.lastDrink, 
+      nextDrinkTime: this.activeSession.nextDrinkTime,
       sessionTotal: this.activeSession.unitsConsumed,
       sessionRemaining: this.activeSession.sessionRemaining,
       hourlyRate: this.activeSession.hourlyRate,
@@ -76,11 +77,14 @@ class MainPanel extends React.Component<any, IMainPanelState> {
 
   public render() {
     return <Tabs activeTabLabel={this.state.activeTabLabel} activeTabChanged={this.changeTab.bind(this)}>
+      <Tab label="NoSession">
+        <NoSessionPanel></NoSessionPanel>
+      </Tab>
       <Tab label="Session">
-        <SessionTab 
+        <ActiveSessionPanel 
           addDrink={this.addDrink.bind(this)}
           lastDrink={this.state.lastDrink}
-          nextDrink={this.state.nextDrink}
+          nextDrinkTime={this.state.nextDrinkTime}
           sessionTotal={this.state.sessionTotal}
           sessionRemaining={this.state.sessionRemaining}
           hourlyRate={this.state.hourlyRate}
@@ -90,10 +94,10 @@ class MainPanel extends React.Component<any, IMainPanelState> {
           lastAbv={this.state.lastAbv}
           lastVolumeUnit={this.state.lastVolumeUnit}
         >
-        </SessionTab>
+        </ActiveSessionPanel>
       </Tab>
-      <Tab label="Settings"><SettingsTab settingsService={this.settingsService}></SettingsTab></Tab>
-      <Tab label="History"><HistoryTab></HistoryTab></Tab>
+      <Tab label="Settings"><SettingsPanel settingsService={this.settingsService}></SettingsPanel></Tab>
+      <Tab label="History"><HistoryPanel></HistoryPanel></Tab>
     </Tabs>
   }
 }
