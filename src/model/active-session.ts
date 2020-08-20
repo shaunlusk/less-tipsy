@@ -2,12 +2,14 @@ import { Drink } from "./drink";
 
 export interface IActiveSession {
   addDrink(drink: Drink): void;
+  readonly drinks: Drink[];
   readonly lastDrink: Drink | null;
   readonly date: Date;
   readonly unitsConsumed: number;
   readonly sessionMax: number;
   readonly sessionRemaining: number;
   readonly hourlyRate: number;
+  readonly targetHourlyRate: number;
   readonly weeklyMax: number;
   readonly rollingWeeklyTotal: number;
   readonly rollingWeeklyRemaining: number;
@@ -35,6 +37,10 @@ export class ActiveSession implements IActiveSession {
   public addDrink(drink: Drink): void {
     this._drinks.push(drink);
   }
+
+  public get drinks(): Drink[] {
+    return this._drinks;
+  }
   
   public get lastDrink(): Drink | null {
     return this._drinks.length > 0 ? this._drinks[this._drinks.length - 1] : null;
@@ -42,6 +48,10 @@ export class ActiveSession implements IActiveSession {
 
   public get date(): Date {
     return this._date;
+  }
+
+  public set date(date: Date) {
+    this._date = date;
   }
   
   public get unitsConsumed(): number {
@@ -67,6 +77,10 @@ export class ActiveSession implements IActiveSession {
     const lastUnitAllowance = this.lastDrink!.alcoholUnits / this._targetHourlyRate;
     const timeDiff = (currentTime.valueOf() - startTime.valueOf()) / 1000 / 60 / 60 + lastUnitAllowance;
     return this.unitsConsumed / timeDiff;
+  }
+
+  public get targetHourlyRate(): number {
+    return this._targetHourlyRate;
   }
 
   public get weeklyMax(): number {

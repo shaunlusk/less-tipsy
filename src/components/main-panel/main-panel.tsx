@@ -10,9 +10,12 @@ import { VolumeUnit } from '../../model/unit';
 import { Drink } from '../../model/drink';
 import { NoSessionPanel } from '../session-panel/no-session-panel/no-session-panel';
 import './main-panel.scss';
+import { SessionService } from '../../services/session-service';
+import { LocalStorageService } from '../../services/local-storage-service';
 
 interface IMainPanelState {
   activeTabLabel: string;
+  activeSessionExists: boolean;
   lastDrink: Drink | null; 
   nextDrinkTime: Date | null;
   sessionTotal: number;
@@ -27,6 +30,7 @@ interface IMainPanelState {
 
 class MainPanel extends React.Component<any, IMainPanelState> {
   private settingsService = SettingsService.getInstance();
+  private sessionService = new SessionService(new LocalStorageService());
   private activeSession: IActiveSession = new ActiveSession(
     this.settingsService.sessionMax, 
     this.settingsService.weeklyMax, 
@@ -37,7 +41,8 @@ class MainPanel extends React.Component<any, IMainPanelState> {
     super(props);
 
     this.state = {
-      activeTabLabel: 'Session',
+      activeTabLabel: 'NoSession',
+      activeSessionExists: false,
       lastDrink: this.activeSession.lastDrink, 
       nextDrinkTime: this.activeSession.nextDrinkTime,
       sessionTotal: this.activeSession.unitsConsumed,
@@ -75,10 +80,14 @@ class MainPanel extends React.Component<any, IMainPanelState> {
     });
   }
 
+  private beginNewSession(): void {
+    this.setState({activeTabLabel:'Session'});
+  }
+
   public render() {
     return <Tabs activeTabLabel={this.state.activeTabLabel} activeTabChanged={this.changeTab.bind(this)}>
       <Tab label="NoSession">
-        <NoSessionPanel></NoSessionPanel>
+        <NoSessionPanel onBeginNewSession={this.beginNewSession.bind(this)}></NoSessionPanel>
       </Tab>
       <Tab label="Session">
         <ActiveSessionPanel 

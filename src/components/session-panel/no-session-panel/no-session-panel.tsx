@@ -1,8 +1,16 @@
 import * as React from 'react';
 
-export class NoSessionPanel extends React.Component<any, any> {
+export interface INoSessionPanelProps {
+  onBeginNewSession(): void;
+}
 
+export class NoSessionPanel extends React.Component<INoSessionPanelProps, any> {
   public render() {
-    return <div>check</div>
+    return <div>
+      <h3>No Active Sessions</h3>
+      <div>
+        <button onClick={this.props.onBeginNewSession}>Begin New Session</button>
+      </div>
+    </div>
   }
 }
