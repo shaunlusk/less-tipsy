@@ -4,6 +4,7 @@ import { Drink } from '../../../model/drink';
 
 export interface IActiveSessionPanelProps {
   addDrink(drink: Drink): void;
+  finishSession(): void;
   lastDrink: Drink | null;
   nextDrinkTime: Date | null;
   sessionTotal: number;
@@ -112,6 +113,9 @@ export class ActiveSessionPanel extends React.Component<IActiveSessionPanelProps
       <div>{this.props.rollingWeeklyTotal}</div>
       <div>Rolling Weekly Remaining</div>
       <div>{this.props.rollingWeeklyRemaining}</div>
+      <div>
+        <button onClick={this.props.finishSession}>Finish Session</button>
+      </div>
     </div>
   }
 }

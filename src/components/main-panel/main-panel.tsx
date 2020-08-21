@@ -8,10 +8,12 @@ import { ActiveSessionPanel } from '../session-panel/active-session-panel/active
 import { IActiveSession, ActiveSession } from '../../model/active-session';
 import { VolumeUnit } from '../../model/unit';
 import { Drink } from '../../model/drink';
+import { History } from '../../model/history';
 import { NoSessionPanel } from '../session-panel/no-session-panel/no-session-panel';
-import './main-panel.scss';
 import { SessionService } from '../../services/session-service';
 import { LocalStorageService } from '../../services/local-storage-service';
+import { HistoricalSession } from '../../model/historical-session';
+import './main-panel.scss';
 
 interface ISessionState {
   lastDrink: Drink | null; 
@@ -29,12 +31,14 @@ interface ISessionState {
 interface IMainPanelState {
   activeTabLabel: string;
   sessionState: ISessionState | null;
+  history: History;
 }
 
 class MainPanel extends React.Component<any, IMainPanelState> {
   private _settingsService = SettingsService.getInstance();
   private _sessionService = new SessionService(new LocalStorageService());
   private _activeSession: IActiveSession;
+  private _history: History;
 
   constructor(props: any) {
     super(props);
@@ -48,10 +52,12 @@ class MainPanel extends React.Component<any, IMainPanelState> {
         0,
         this._settingsService.consumptionRate);
     }
+    this._history = new History();
 
     this.state = {
       activeTabLabel: 'Session',
-      sessionState: activeSession ? this.getUpdatedSessionState() : null
+      sessionState: activeSession ? this.getUpdatedSessionState() : null,
+      history: this._history
     };
   }
 
@@ -89,12 +95,36 @@ class MainPanel extends React.Component<any, IMainPanelState> {
     });
   }
 
+  private finishSession(): void {
+    const histSession = new HistoricalSession(
+      this._activeSession.unitsConsumed,
+      this._activeSession.date,
+      this._activeSession.sessionMax,
+      this._activeSession.weeklyMax,
+      this._activeSession.rollingWeeklyTotal
+    );
+    this._history.addSession(histSession);
+
+    this._activeSession = new ActiveSession(
+      this._settingsService.sessionMax, 
+      this._settingsService.weeklyMax, 
+      0,
+      this._settingsService.consumptionRate);
+    this._sessionService.saveSession(this._activeSession);
+    this.setState({
+      activeTabLabel:'Session',
+      sessionState: null,
+      history: this._history
+    });
+  }
+
   public render() {
     return <Tabs activeTabLabel={this.state.activeTabLabel} activeTabChanged={this.changeTab.bind(this)}>
       {this.state.sessionState ? 
         <Tab label="Session">
           <ActiveSessionPanel 
             addDrink={this.addDrink.bind(this)}
+            finishSession={this.finishSession.bind(this)}
             lastDrink={this.state.sessionState.lastDrink}
             nextDrinkTime={this.state.sessionState.nextDrinkTime}
             sessionTotal={this.state.sessionState.sessionTotal}
@@ -112,7 +142,7 @@ class MainPanel extends React.Component<any, IMainPanelState> {
           <NoSessionPanel onBeginNewSession={this.beginNewSession.bind(this)}></NoSessionPanel>
         </Tab> }
       <Tab label="Settings"><SettingsPanel settingsService={this._settingsService}></SettingsPanel></Tab>
-      <Tab label="History"><HistoryPanel></HistoryPanel></Tab>
+      <Tab label="History"><HistoryPanel history={this.state.history}></HistoryPanel></Tab>
     </Tabs>
   }
 }

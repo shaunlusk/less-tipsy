@@ -65,4 +65,8 @@ export class SessionService {
     };
     this._localStorageService.putObject<IActiveSessionSaveModel>(this.ActiveSessionStorageKey, saveModel);
   }
+
+  public deleteSession(): void {
+    this._localStorageService.remove(this.ActiveSessionStorageKey);
+  }
 }
