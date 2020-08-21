@@ -13,9 +13,7 @@ import './main-panel.scss';
 import { SessionService } from '../../services/session-service';
 import { LocalStorageService } from '../../services/local-storage-service';
 
-interface IMainPanelState {
-  activeTabLabel: string;
-  activeSessionExists: boolean;
+interface ISessionState {
   lastDrink: Drink | null; 
   nextDrinkTime: Date | null;
   sessionTotal: number;
@@ -28,84 +26,92 @@ interface IMainPanelState {
   lastVolumeUnit: VolumeUnit;
 }
 
+interface IMainPanelState {
+  activeTabLabel: string;
+  sessionState: ISessionState | null;
+}
+
 class MainPanel extends React.Component<any, IMainPanelState> {
-  private settingsService = SettingsService.getInstance();
-  private sessionService = new SessionService(new LocalStorageService());
-  private activeSession: IActiveSession = new ActiveSession(
-    this.settingsService.sessionMax, 
-    this.settingsService.weeklyMax, 
-    0,  // TODO Load from storage
-    this.settingsService.consumptionRate);
+  private _settingsService = SettingsService.getInstance();
+  private _sessionService = new SessionService(new LocalStorageService());
+  private _activeSession: IActiveSession;
 
   constructor(props: any) {
     super(props);
+    const activeSession = this._sessionService.loadSession();
+    if (activeSession) {
+      this._activeSession = activeSession;
+    } else {
+      this._activeSession = new ActiveSession(
+        this._settingsService.sessionMax, 
+        this._settingsService.weeklyMax, 
+        0,
+        this._settingsService.consumptionRate);
+    }
 
     this.state = {
-      activeTabLabel: 'NoSession',
-      activeSessionExists: false,
-      lastDrink: this.activeSession.lastDrink, 
-      nextDrinkTime: this.activeSession.nextDrinkTime,
-      sessionTotal: this.activeSession.unitsConsumed,
-      sessionRemaining: this.activeSession.sessionRemaining,
-      hourlyRate: this.activeSession.hourlyRate,
-      rollingWeeklyTotal: this.activeSession.rollingWeeklyTotal,
-      rollingWeeklyRemaining: this.activeSession.rollingWeeklyRemaining,
-      lastVolume: this.activeSession.lastDrink ? this.activeSession.lastDrink.volume : 12,
-      lastAbv: this.activeSession.lastDrink ? this.activeSession.lastDrink.abv : 5,
-      lastVolumeUnit: this.activeSession.lastDrink ? this.activeSession.lastDrink.volumeUnit : VolumeUnit.Ounces,
+      activeTabLabel: 'Session',
+      sessionState: activeSession ? this.getUpdatedSessionState() : null
     };
   }
 
   public addDrink(drink: Drink): void {
-    this.activeSession.addDrink(drink);
-    this.updateState();
+    this._activeSession.addDrink(drink);
+    this._sessionService.saveSession(this._activeSession);
+    this.setState({ sessionState: this.getUpdatedSessionState() }); 
   }
 
   public changeTab(label: string) {
     this.setState({activeTabLabel:label});
   }
 
-  private updateState(): void {
-    this.setState({
-      lastDrink: this.activeSession.lastDrink, 
-      nextDrinkTime: this.activeSession.nextDrinkTime,
-      sessionTotal: this.activeSession.unitsConsumed,
-      sessionRemaining: this.activeSession.sessionRemaining,
-      hourlyRate: this.activeSession.hourlyRate,
-      rollingWeeklyTotal: this.activeSession.rollingWeeklyTotal,
-      rollingWeeklyRemaining: this.activeSession.rollingWeeklyRemaining,
-      lastVolume: this.activeSession.lastDrink ? this.activeSession.lastDrink.volume : 12,
-      lastAbv: this.activeSession.lastDrink ? this.activeSession.lastDrink.abv : 5,
-      lastVolumeUnit: this.activeSession.lastDrink ? this.activeSession.lastDrink.volumeUnit : VolumeUnit.Ounces,
-    });
+  private getUpdatedSessionState(): ISessionState {
+    const sessionState: ISessionState = {
+      lastDrink: this._activeSession.lastDrink, 
+      nextDrinkTime: this._activeSession.nextDrinkTime,
+      sessionTotal: this._activeSession.unitsConsumed,
+      sessionRemaining: this._activeSession.sessionRemaining,
+      hourlyRate: this._activeSession.hourlyRate,
+      rollingWeeklyTotal: this._activeSession.rollingWeeklyTotal,
+      rollingWeeklyRemaining: this._activeSession.rollingWeeklyRemaining,
+      lastVolume: this._activeSession.lastDrink ? this._activeSession.lastDrink.volume : 12,
+      lastAbv: this._activeSession.lastDrink ? this._activeSession.lastDrink.abv : 5,
+      lastVolumeUnit: this._activeSession.lastDrink ? this._activeSession.lastDrink.volumeUnit : VolumeUnit.Ounces  
+    };
+
+    return sessionState;
   }
 
   private beginNewSession(): void {
-    this.setState({activeTabLabel:'Session'});
+    this.setState({
+      activeTabLabel:'Session',
+      sessionState: this.getUpdatedSessionState()
+    });
   }
 
   public render() {
     return <Tabs activeTabLabel={this.state.activeTabLabel} activeTabChanged={this.changeTab.bind(this)}>
-      <Tab label="NoSession">
-        <NoSessionPanel onBeginNewSession={this.beginNewSession.bind(this)}></NoSessionPanel>
-      </Tab>
-      <Tab label="Session">
-        <ActiveSessionPanel 
-          addDrink={this.addDrink.bind(this)}
-          lastDrink={this.state.lastDrink}
-          nextDrinkTime={this.state.nextDrinkTime}
-          sessionTotal={this.state.sessionTotal}
-          sessionRemaining={this.state.sessionRemaining}
-          hourlyRate={this.state.hourlyRate}
-          rollingWeeklyTotal={this.state.rollingWeeklyTotal}
-          rollingWeeklyRemaining={this.state.rollingWeeklyRemaining}
-          lastVolume={this.state.lastVolume}
-          lastAbv={this.state.lastAbv}
-          lastVolumeUnit={this.state.lastVolumeUnit}
-        >
-        </ActiveSessionPanel>
-      </Tab>
-      <Tab label="Settings"><SettingsPanel settingsService={this.settingsService}></SettingsPanel></Tab>
+      {this.state.sessionState ? 
+        <Tab label="Session">
+          <ActiveSessionPanel 
+            addDrink={this.addDrink.bind(this)}
+            lastDrink={this.state.sessionState.lastDrink}
+            nextDrinkTime={this.state.sessionState.nextDrinkTime}
+            sessionTotal={this.state.sessionState.sessionTotal}
+            sessionRemaining={this.state.sessionState.sessionRemaining}
+            hourlyRate={this.state.sessionState.hourlyRate}
+            rollingWeeklyTotal={this.state.sessionState.rollingWeeklyTotal}
+            rollingWeeklyRemaining={this.state.sessionState.rollingWeeklyRemaining}
+            lastVolume={this.state.sessionState.lastVolume}
+            lastAbv={this.state.sessionState.lastAbv}
+            lastVolumeUnit={this.state.sessionState.lastVolumeUnit}
+          >
+          </ActiveSessionPanel>
+        </Tab>
+      : <Tab label="Session">
+          <NoSessionPanel onBeginNewSession={this.beginNewSession.bind(this)}></NoSessionPanel>
+        </Tab> }
+      <Tab label="Settings"><SettingsPanel settingsService={this._settingsService}></SettingsPanel></Tab>
       <Tab label="History"><HistoryPanel></HistoryPanel></Tab>
     </Tabs>
   }

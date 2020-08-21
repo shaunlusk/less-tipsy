@@ -8,9 +8,9 @@ export class Drink {
   private _abv: number;
   private _time: Date;
   
-  constructor(amount: number, amountUnit: VolumeUnit, abv: number, time?: Date) {
-    this._volume = amount;
-    this._volumeUnit = amountUnit;
+  constructor(volume: number, volumeUnit: VolumeUnit, abv: number, time?: Date) {
+    this._volume = volume;
+    this._volumeUnit = volumeUnit;
     this._abv = abv;
     this._time = time || new Date();
   }
