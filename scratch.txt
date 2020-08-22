@@ -1,4 +1,5 @@
 todo:
+bug fix: cancelling a session doesn't remove it from local storage
 
 save/cancel/reset settings buttons
 inputs with validation
