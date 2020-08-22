@@ -5,6 +5,7 @@ import { Drink } from '../../../model/drink';
 export interface IActiveSessionPanelProps {
   addDrink(drink: Drink): void;
   finishSession(): void;
+  cancelSession(): void;
   lastDrink: Drink | null;
   nextDrinkTime: Date | null;
   sessionTotal: number;
@@ -67,6 +68,10 @@ export class ActiveSessionPanel extends React.Component<IActiveSessionPanelProps
     return this.state.currentAbv !== null && this.state.currentAbv.trim().length > 0;
   }
 
+  public cancelSession(): void {
+    this.props.cancelSession();
+  }
+
   public render() {
     return <div>
       <div>Add Drink</div>
@@ -97,7 +102,7 @@ export class ActiveSessionPanel extends React.Component<IActiveSessionPanelProps
           onChange={e => this.handleChangeAbv(e.target.value)}
         ></input>
       <div>
-        <button onClick={() => this.addDrink()}>Add</button>
+        <button onClick={this.addDrink.bind(this)}>Add</button>
       </div>
       <div>Last Drink</div>
       <div>Last Drink Placeholder</div>
@@ -115,6 +120,7 @@ export class ActiveSessionPanel extends React.Component<IActiveSessionPanelProps
       <div>{this.props.rollingWeeklyRemaining}</div>
       <div>
         <button onClick={this.props.finishSession}>Finish Session</button>
+        <button onClick={this.cancelSession.bind(this)}>Cancel Session</button>
       </div>
     </div>
   }

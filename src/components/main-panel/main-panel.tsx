@@ -149,6 +149,19 @@ class MainPanel extends React.Component<any, IMainPanelState> {
     });
   }
 
+  public cancelSession(): void {
+    this._activeSession = new ActiveSession(
+      this._settingsService.sessionMax, 
+      this._settingsService.weeklyMax, 
+      0,
+      this._settingsService.consumptionRate);
+    this._sessionService.saveSession(this._activeSession);
+    this.setState({
+      activeTabLabel:'Session',
+      sessionState: null,
+    });
+  }
+
   public render() {
     return <Tabs activeTabLabel={this.state.activeTabLabel} activeTabChanged={this.changeTab.bind(this)}>
       {this.state.sessionState ? 
@@ -156,6 +169,7 @@ class MainPanel extends React.Component<any, IMainPanelState> {
           <ActiveSessionPanel 
             addDrink={this.addDrink.bind(this)}
             finishSession={this.finishSession.bind(this)}
+            cancelSession={this.cancelSession.bind(this)}
             lastDrink={this.state.sessionState.lastDrink}
             nextDrinkTime={this.state.sessionState.nextDrinkTime}
             sessionTotal={this.state.sessionState.sessionTotal}
