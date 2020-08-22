@@ -1,8 +1,15 @@
 import * as React from 'react';
-import { History } from '../../model/history';
+
+export interface IHistoryPanelSession {
+  unitsConsumed: number;
+  sessionMax: number;
+  weeklyMax: number;
+  rollingWeekly: number;
+  date: Date;
+}
 
 export interface IHistoryPanelProps {
-  history: History;
+  sessions: IHistoryPanelSession[];
 }
 
 class HistoryPanel extends React.Component<IHistoryPanelProps, any> {
@@ -10,7 +17,7 @@ class HistoryPanel extends React.Component<IHistoryPanelProps, any> {
     let idx = 0;
     return <div>
         <h3>History</h3>
-        {this.props.history.sessions.map(session => (
+        {this.props.sessions.map(session => (
           <div key={'session-' + (idx++)}>
             <span>{session.date.toString()}</span>
             <span>{session.unitsConsumed}</span>
