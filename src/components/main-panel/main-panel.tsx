@@ -47,6 +47,7 @@ interface IMainPanelState {
   sessionState: ISessionState | null;
   history: IHistoryState;
   showCancelSessionWarning: boolean;
+  showDeleteHistoryWarning: boolean;
 }
 
 class MainPanel extends React.Component<any, IMainPanelState> {
@@ -79,7 +80,8 @@ class MainPanel extends React.Component<any, IMainPanelState> {
       activeTabLabel: 'Session',
       sessionState: activeSession ? this.getUpdatedSessionState() : null,
       history: this._history,
-      showCancelSessionWarning: false
+      showCancelSessionWarning: false,
+      showDeleteHistoryWarning: false
     };
   }
 
@@ -152,11 +154,11 @@ class MainPanel extends React.Component<any, IMainPanelState> {
     });
   }
 
-  public showCancelSessionWarning(): void {
+  public warnCancelSession(): void {
     this.setState({showCancelSessionWarning: true});
   }
 
-  public confirmCancelSession(result: boolean) {
+  public finishCancelSession(result: boolean): void {
     if (result) {
       this._activeSession = new ActiveSession(
         this._settingsService.sessionMax, 
@@ -174,6 +176,23 @@ class MainPanel extends React.Component<any, IMainPanelState> {
     }
   }
 
+  public warnDeleteHistory(): void {
+    this.setState({showDeleteHistoryWarning: true});
+  }
+
+  public finishDeleteHistory(result: boolean): void {
+    if (result) {
+      this._historyService.deleteHistory();
+      this._history = new History();
+      this.setState({
+        history: this._history,
+        showDeleteHistoryWarning: false
+      });
+    }  else {
+      this.setState({showDeleteHistoryWarning: false});
+    }
+  }
+
   public render() {
     return <Tabs activeTabLabel={this.state.activeTabLabel} activeTabChanged={this.changeTab.bind(this)}>
       {this.state.sessionState ? 
@@ -181,7 +200,7 @@ class MainPanel extends React.Component<any, IMainPanelState> {
           <ActiveSessionPanel 
             addDrink={this.addDrink.bind(this)}
             finishSession={this.finishSession.bind(this)}
-            cancelSession={this.showCancelSessionWarning.bind(this)}
+            cancelSession={this.warnCancelSession.bind(this)}
             lastDrink={this.state.sessionState.lastDrink}
             nextDrinkTime={this.state.sessionState.nextDrinkTime}
             sessionTotal={this.state.sessionState.sessionTotal}
@@ -199,7 +218,7 @@ class MainPanel extends React.Component<any, IMainPanelState> {
             show={this.state.showCancelSessionWarning}
             acceptText="Cancel Session" 
             rejectText="Keep Current Session" 
-            handleClose={this.confirmCancelSession.bind(this)}
+            handleClose={this.finishCancelSession.bind(this)}
           >
             Are you sure you want to cancel the current session?  This cannot be undone!
           </TrueFalseSelectionModal>
@@ -208,7 +227,18 @@ class MainPanel extends React.Component<any, IMainPanelState> {
           <NoSessionPanel onBeginNewSession={this.beginNewSession.bind(this)}></NoSessionPanel>
         </Tab> }
       <Tab label="Settings"><SettingsPanel settingsService={this._settingsService}></SettingsPanel></Tab>
-      <Tab label="History"><HistoryPanel sessions={this.state.history.sessions}></HistoryPanel></Tab>
+      <Tab label="History">
+        <HistoryPanel sessions={this.state.history.sessions} deleteHistory={this.warnDeleteHistory.bind(this)}></HistoryPanel>
+        <TrueFalseSelectionModal 
+            title="Delete Session?"
+            show={this.state.showDeleteHistoryWarning}
+            acceptText="Delete History" 
+            rejectText="Keep History" 
+            handleClose={this.finishDeleteHistory.bind(this)}
+          >
+            Are you sure you want to delete the <b>entire</b> history?  This cannot be undone!
+          </TrueFalseSelectionModal>
+      </Tab>
     </Tabs>
   }
 }

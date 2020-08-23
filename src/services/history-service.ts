@@ -51,4 +51,8 @@ export class HistoryService {
     };
     this._localStorageService.putObject<IHistorySaveModel>(HistoryStorageKey, saveModel);
   }
+
+  public deleteHistory(): void {
+    this._localStorageService.remove(HistoryStorageKey);
+  }
 }
