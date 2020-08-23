@@ -1,4 +1,5 @@
 import * as React from 'react';
+import './main-panel.scss';
 import { Tabs } from '../tabs/tabs';
 import { Tab } from '../tabs/tab';
 import { SettingsPanel } from '../settings-panel/settings-panel';
@@ -13,8 +14,8 @@ import { NoSessionPanel } from '../session-panel/no-session-panel/no-session-pan
 import { SessionService } from '../../services/session-service';
 import { LocalStorageService } from '../../services/local-storage-service';
 import { HistoricalSession } from '../../model/historical-session';
-import './main-panel.scss';
 import { HistoryService } from '../../services/history-service';
+import { TrueFalseSelectionModal } from '../modal/modal-true-false-selection';
 
 interface ISessionState {
   lastDrink: Drink | null; 
@@ -45,6 +46,7 @@ interface IMainPanelState {
   activeTabLabel: string;
   sessionState: ISessionState | null;
   history: IHistoryState;
+  showCancelSessionWarning: boolean;
 }
 
 class MainPanel extends React.Component<any, IMainPanelState> {
@@ -76,7 +78,8 @@ class MainPanel extends React.Component<any, IMainPanelState> {
     this.state = {
       activeTabLabel: 'Session',
       sessionState: activeSession ? this.getUpdatedSessionState() : null,
-      history: this._history
+      history: this._history,
+      showCancelSessionWarning: false
     };
   }
 
@@ -149,17 +152,26 @@ class MainPanel extends React.Component<any, IMainPanelState> {
     });
   }
 
-  public cancelSession(): void {
-    this._activeSession = new ActiveSession(
-      this._settingsService.sessionMax, 
-      this._settingsService.weeklyMax, 
-      0,
-      this._settingsService.consumptionRate);
-    this._sessionService.saveSession(this._activeSession);
-    this.setState({
-      activeTabLabel:'Session',
-      sessionState: null,
-    });
+  public showCancelSessionWarning(): void {
+    this.setState({showCancelSessionWarning: true});
+  }
+
+  public confirmCancelSession(result: boolean) {
+    if (result) {
+      this._activeSession = new ActiveSession(
+        this._settingsService.sessionMax, 
+        this._settingsService.weeklyMax, 
+        0,
+        this._settingsService.consumptionRate);
+      this._sessionService.deleteSession();
+      this.setState({
+        activeTabLabel:'Session',
+        sessionState: null,
+        showCancelSessionWarning: false
+      });
+    } else {
+      this.setState({showCancelSessionWarning: false});
+    }
   }
 
   public render() {
@@ -169,7 +181,7 @@ class MainPanel extends React.Component<any, IMainPanelState> {
           <ActiveSessionPanel 
             addDrink={this.addDrink.bind(this)}
             finishSession={this.finishSession.bind(this)}
-            cancelSession={this.cancelSession.bind(this)}
+            cancelSession={this.showCancelSessionWarning.bind(this)}
             lastDrink={this.state.sessionState.lastDrink}
             nextDrinkTime={this.state.sessionState.nextDrinkTime}
             sessionTotal={this.state.sessionState.sessionTotal}
@@ -182,6 +194,15 @@ class MainPanel extends React.Component<any, IMainPanelState> {
             lastVolumeUnit={this.state.sessionState.lastVolumeUnit}
           >
           </ActiveSessionPanel>
+          <TrueFalseSelectionModal 
+            title="Cancel Session?"
+            show={this.state.showCancelSessionWarning}
+            acceptText="Cancel Session" 
+            rejectText="Keep Current Session" 
+            handleClose={this.confirmCancelSession.bind(this)}
+          >
+            Are you sure you want to cancel the current session?  This cannot be undone!
+          </TrueFalseSelectionModal>
         </Tab>
       : <Tab label="Session">
           <NoSessionPanel onBeginNewSession={this.beginNewSession.bind(this)}></NoSessionPanel>

@@ -1,0 +1,37 @@
+
+.modal-main {
+  background-color: black;
+  border: 1px solid white;
+  border-radius: 5px;
+  z-index: 100;
+  padding: 8px;
+}
+
+.modal-buttons-accept {
+  background-color: yellowgreen;
+  color: white;
+  border: 3px solid green;
+  border-radius: 3px;
+  padding: 5px;
+  font-weight: 800;
+}
+
+.modal-buttons-reject {
+  margin-right: 8px;
+  background-color: orangered;
+  color: white;
+  border: 3px solid darkred;
+  border-radius: 3px;
+  padding: 5px;
+  font-weight: 800;
+}
+
+.modal-title {
+  padding-bottom: 5px;
+  border-bottom: 1px solid grey;
+  font-weight: bolder;
+}
+
+.modal-content {
+  padding-top: 8px;
+}
