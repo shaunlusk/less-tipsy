@@ -112,6 +112,6 @@ export class ActiveSession implements IActiveSession {
     if (!this.lastDrink) {
       return null;
     }
-    return new Date((this.lastDrink!.alcoholUnits / this._targetHourlyRate) * 60 * 60 * 1000);
+    return new Date(Date.now() + (this.lastDrink!.alcoholUnits / this._targetHourlyRate) * 60 * 60 * 1000);
   }
 }

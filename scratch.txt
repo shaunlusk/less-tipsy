@@ -5,24 +5,18 @@ style modals better
 style buttons better
 style panels better
 standardize storage keys
-save/cancel/reset settings buttons
+save/cancel/reset settings buttons with warning
 inputs with validation
 prevent saving settings if inputs invalid
 prevent creating session if settings not valid?
-
-popup warnings
 
 show last drink
 edit last drink
 delete last drink
 
-clear history
-
 history persistence settings
 
 time for next drink alert
-
-nullable time display component - show times on session tab
 
 auto convert volume on unit change
 

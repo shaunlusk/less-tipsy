@@ -2,6 +2,7 @@ import * as React from 'react';
 import { VolumeUnit } from '../../../model/unit';
 import { Drink } from '../../../model/drink';
 import { NumberDisplay } from '../../number-display/number-display';
+import { TimeDisplay } from '../../time-display/time-display';
 
 export interface IActiveSessionPanelProps {
   addDrink(drink: Drink): void;
@@ -108,7 +109,10 @@ export class ActiveSessionPanel extends React.Component<IActiveSessionPanelProps
       <div>Last Drink</div>
       <div>Last Drink Placeholder</div>
       <div>Next Drink</div>
-      <div>Next Drink Placeholder</div>
+      <div>{this.props.nextDrinkTime 
+        ? <TimeDisplay datetime={this.props.nextDrinkTime}></TimeDisplay>
+        : <span>--</span>}
+      </div>
       <div>Session Total</div>
       <div><NumberDisplay number={this.props.sessionTotal} decimalPlaces={1}></NumberDisplay></div>
       <div>Session Remaining</div>
