@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { VolumeUnit } from '../../../model/unit';
 import { Drink } from '../../../model/drink';
+import { NumberDisplay } from '../../number-display/number-display';
 
 export interface IActiveSessionPanelProps {
   addDrink(drink: Drink): void;
@@ -109,15 +110,15 @@ export class ActiveSessionPanel extends React.Component<IActiveSessionPanelProps
       <div>Next Drink</div>
       <div>Next Drink Placeholder</div>
       <div>Session Total</div>
-      <div>{this.props.sessionTotal}</div>
+      <div><NumberDisplay number={this.props.sessionTotal} decimalPlaces={1}></NumberDisplay></div>
       <div>Session Remaining</div>
-      <div>{this.props.sessionRemaining}</div>
+      <div><NumberDisplay number={this.props.sessionRemaining} decimalPlaces={1}></NumberDisplay></div>
       <div>Rolling Hourly Rate</div>
-      <div>{this.props.hourlyRate}</div>
+      <div><NumberDisplay number={this.props.hourlyRate} decimalPlaces={1}></NumberDisplay></div>
       <div>Rolling Weekly Total</div>
-      <div>{this.props.rollingWeeklyTotal}</div>
+      <div><NumberDisplay number={this.props.rollingWeeklyTotal} decimalPlaces={1}></NumberDisplay></div>
       <div>Rolling Weekly Remaining</div>
-      <div>{this.props.rollingWeeklyRemaining}</div>
+      <div><NumberDisplay number={this.props.rollingWeeklyRemaining} decimalPlaces={1}></NumberDisplay></div>
       <div>
         <button onClick={this.props.finishSession}>Finish Session</button>
         <button onClick={this.cancelSession.bind(this)}>Cancel Session</button>
