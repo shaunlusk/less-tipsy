@@ -2,10 +2,10 @@ import React, { FunctionComponent } from 'react';
 
 export interface ITimeDisplay {
   datetime: Date;
-  twentyFourHour?: boolean;
+  twentyFourHourDisplay?: boolean;
 }
 
-export const TimeDisplay: FunctionComponent<ITimeDisplay> = ({datetime, twentyFourHour: twentyFourHourDisplay}) => {
+export const TimeDisplay: FunctionComponent<ITimeDisplay> = ({datetime, twentyFourHourDisplay}) => {
   const baseHours = datetime.getHours(); 
   const displayHours = twentyFourHourDisplay || baseHours < 13 ? baseHours : baseHours - 12;
   const baseMinutes = datetime.getMinutes();

@@ -3,6 +3,7 @@ import { VolumeUnit } from '../../../model/unit';
 import { Drink } from '../../../model/drink';
 import { NumberDisplay } from '../../number-display/number-display';
 import { TimeDisplay } from '../../time-display/time-display';
+import { LastDrinkDisplay } from '../../last-drink-display/last-drink-display';
 
 export interface IActiveSessionPanelProps {
   addDrink(drink: Drink): void;
@@ -107,7 +108,10 @@ export class ActiveSessionPanel extends React.Component<IActiveSessionPanelProps
         <button onClick={this.addDrink.bind(this)}>Add</button>
       </div>
       <div>Last Drink</div>
-      <div>Last Drink Placeholder</div>
+      <div>{this.props.lastDrink 
+        ? <LastDrinkDisplay drink={this.props.lastDrink}></LastDrinkDisplay>
+        : <span>--</span>}
+      </div>
       <div>Next Drink</div>
       <div>{this.props.nextDrinkTime 
         ? <TimeDisplay datetime={this.props.nextDrinkTime}></TimeDisplay>
