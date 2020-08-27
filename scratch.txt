@@ -1,5 +1,6 @@
 todo:
 
+better ways of calculating next drink time
 disable delete history button if no history
 style modals better
 style buttons better
@@ -10,7 +11,9 @@ inputs with validation
 prevent saving settings if inputs invalid
 prevent creating session if settings not valid?
 
-show last drink
+active session has an interface.  Is it necessary?
+was there a singleton that might not be necessary?
+
 edit last drink
 delete last drink
 
