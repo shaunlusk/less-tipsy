@@ -1,4 +1,4 @@
-import { ActiveSession, IActiveSession } from "../model/active-session";
+import { ActiveSession } from "../model/active-session";
 import { Drink } from "../model/drink";
 import { LocalStorageService } from "./local-storage-service";
 import { VolumeUnit } from "../model/unit";
@@ -20,8 +20,8 @@ interface IActiveSessionSaveModel {
 }
 
 export interface ISessionService {
-  loadSession(): IActiveSession | null;
-  saveSession(session: IActiveSession): void;
+  loadSession(): ActiveSession | null;
+  saveSession(session: ActiveSession): void;
 }
 
 export class SessionService {
@@ -32,7 +32,7 @@ export class SessionService {
     this._localStorageService = localStorageService;
   }
 
-  public loadSession(): IActiveSession | null {
+  public loadSession(): ActiveSession | null {
     const savedModel = this._localStorageService.getObject<IActiveSessionSaveModel>(this.ActiveSessionStorageKey);
     if (!savedModel) {
       return null;
@@ -48,7 +48,7 @@ export class SessionService {
     return activeSession;
   }
 
-  public saveSession(session: IActiveSession): void {
+  public saveSession(session: ActiveSession): void {
     const drinks: IDrinkSaveModel[] = session.drinks.map(drink => ({
       volume: drink.volume,
       volumeUnit: drink.volumeUnit,

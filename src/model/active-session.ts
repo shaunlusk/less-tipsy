@@ -1,25 +1,6 @@
 import { Drink } from "./drink";
 
-export interface IActiveSession {
-  addDrink(drink: Drink): void;
-  readonly drinks: Drink[];
-  readonly lastDrink: Drink | null;
-  readonly date: Date;
-  readonly unitsConsumed: number;
-  readonly sessionMax: number;
-  readonly sessionRemaining: number;
-  readonly hourlyRate: number;
-  readonly targetHourlyRate: number;
-  readonly weeklyMax: number;
-  readonly rollingWeeklyTotal: number;
-  readonly rollingWeeklyRemaining: number;
-  readonly isHourlyRateOk: boolean;
-  readonly isSessionOk: boolean;
-  readonly isWeeklyOk: boolean;
-  readonly nextDrinkTime: Date | null;
-}
-
-export class ActiveSession implements IActiveSession {
+export class ActiveSession {
   private _drinks: Drink[] = [];
   private _sessionMax: number;
   private _weeklyMax: number;
