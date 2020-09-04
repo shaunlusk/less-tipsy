@@ -64,8 +64,6 @@ export interface IMainPanelProps {
   settingsService: SettingsService;
   sessionService: SessionService;
   historyService: HistoryService;
-  activeSession: ActiveSession;
-  history: History;
 }
 
 class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
@@ -80,8 +78,8 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     this._settingsService = props.settingsService;
     this._sessionService = props.sessionService;
     this._historyService = props.historyService;
-    this._activeSession = props.activeSession;
-    this._history = props.history;
+    this._activeSession = this._loadSession();
+    this._history = this._loadHistory();
 
     this.state = {
       activeTabLabel: 'Settings',
@@ -91,6 +89,30 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
       showDeleteHistoryWarning: false,
       settingsState: this.getSettingsStateFromService()
     };
+  }
+
+  private _loadHistory(): History {
+    let history = this._historyService.loadHistory();
+    if (!history) {
+      history = new History();
+    }
+    return history;
+  }
+
+  private _loadSession(): ActiveSession | null {
+    let activeSession = this._sessionService.loadSession();
+    return activeSession;
+  }
+
+  private _refreshHistory(): void {
+    this._historyService.saveHistory(this._history);
+    this._history = this._loadHistory();
+    this.setState({history: this.getUpdatedHistorySate()});
+  }
+
+  private _refreshSettings(): void {
+    const newSettingsState = this.getSettingsStateFromService();
+    this.setState({settingsState: newSettingsState});
   }
 
   public addDrink(drink: Drink): void {
@@ -138,6 +160,13 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
   }
 
   private beginNewSession(): void {
+    this._activeSession = new ActiveSession(
+      this._settingsService.sessionMax, 
+      this._settingsService.weeklyMax, 
+      0,
+      this._settingsService.consumptionRate);
+    this._sessionService.saveSession(this._activeSession);
+
     this.setState({
       activeTabLabel:'Session',
       sessionState: this.getUpdatedSessionState()
@@ -156,18 +185,11 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
       this._activeSession.rollingWeeklyTotal
     );
     this._history.addSession(histSession);
-    this._historyService.saveHistory(this._history);
+    this._refreshHistory();
 
-    this._activeSession = new ActiveSession(
-      this._settingsService.sessionMax, 
-      this._settingsService.weeklyMax, 
-      0,
-      this._settingsService.consumptionRate);
-    this._sessionService.saveSession(this._activeSession);
     this.setState({
       activeTabLabel:'Session',
-      sessionState: null,
-      history: this.getUpdatedHistorySate()
+      sessionState: null
     });
   }
 
@@ -280,12 +302,12 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
   }
 
   public handleCancelSettingsChanges(): void {
-    const newSettingsState = this.getSettingsStateFromService();
-    this.setState({settingsState: newSettingsState});
+    this._refreshSettings();
   }
 
   public handleRestoreDefaultSettings(): void {
     this.props.settingsService.restoreDefaults();
+    this._historyService.sessionsToKeep = this.props.settingsService.historySessionsToKeep;
     const newSettingsState = this.getSettingsStateFromService();
     this.setState({settingsState: newSettingsState});
   }
@@ -303,13 +325,17 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
   }
   
   public handleSaveSettings(): void {
+    const sessionsToKeep = parseInt(this.state.settingsState.historySessionsToKeep);
     this._settingsService.updateSettings({
       weeklyMax: parseFloat(this.state.settingsState.weeklyMax),
       sessionMax: parseFloat(this.state.settingsState.sessionMax),
       alcoholUnits: parseFloat(this.state.settingsState.units),
       hours: parseFloat(this.state.settingsState.hours),
-      historySessionsToKeep: parseInt(this.state.settingsState.historySessionsToKeep),
+      historySessionsToKeep: sessionsToKeep,
     });
+    this._historyService.sessionsToKeep = sessionsToKeep;
+    this._refreshHistory();
+    this._refreshSettings();
   }
 
   public render() {

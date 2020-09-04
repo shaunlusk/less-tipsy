@@ -1,23 +1,17 @@
 todo:
 
+validation class
 better ways of calculating next drink time
 style modals better
 style buttons better
 style panels better
 standardize storage keys
-save/cancel/reset settings buttons with warning
-inputs with validation
-prevent saving settings if inputs invalid
+Warning on change settings?
 prevent creating session if settings not valid?
 input components with validation?
 
-active session has an interface.  Is it necessary?
-was there a singleton that might not be necessary?
-
 edit last drink
 delete last drink
-
-history persistence settings
 
 time for next drink alert
 
@@ -26,5 +20,8 @@ auto convert volume on unit change
 about tab
 
 enable/disable tab
+
+import/export history
+sort out public/private/ret values on all methods
 
 

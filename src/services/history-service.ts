@@ -41,6 +41,14 @@ export class HistoryService {
     return history;
   }
 
+  public set sessionsToKeep(value: number) {
+    this._sessionsToKeep = value;
+  }
+
+  public get sessionsToKeep(): number {
+    return this._sessionsToKeep;
+  }
+
   public saveHistory(history: History): void {
     const start = history.sessions.length > this._sessionsToKeep 
       ? history.sessions.length - this._sessionsToKeep : 0;

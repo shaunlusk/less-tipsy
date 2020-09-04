@@ -12,8 +12,6 @@ function App() {
         settingsService={initializer.settingsService}
         sessionService={initializer.sessionService}
         historyService={initializer.historyService}
-        activeSession={initializer.activeSession}
-        history={initializer.history}
       />
     </div>
   );
