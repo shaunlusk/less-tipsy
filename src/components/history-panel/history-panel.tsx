@@ -38,7 +38,7 @@ class HistoryPanel extends React.Component<IHistoryPanelProps, any> {
           </React.Fragment>
         })}
         </div>
-        <div className="history-panel-buttons"><button onClick={this.props.deleteHistory}>Delete History</button></div>
+        <div className="history-panel-buttons"><button disabled={this.props.sessions.length === 0} onClick={this.props.deleteHistory}>Delete History</button></div>
       </div>
   }
 }
