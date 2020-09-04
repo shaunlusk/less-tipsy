@@ -1,27 +1,35 @@
 todo:
 
-validation class
-better ways of calculating next drink time
+Required:
+---------
+about tab
+disclaimer
+sort out public/private/ret values on all methods
+standardize storage keys
+import/export history
+
+Nice to have
+------------
+edit last drink
+delete last drink
 style modals better
 style buttons better
 style panels better
-standardize storage keys
+time for next drink alert
+better ways of calculating next drink time
+auto convert volume on unit change
+validation class
+other ways of cleaning up main panel code
+
+Maybe?
+------
 Warning on change settings?
 prevent creating session if settings not valid?
 input components with validation?
+enable/disable tab?
 
-edit last drink
-delete last drink
-
-time for next drink alert
-
-auto convert volume on unit change
-
-about tab
-
-enable/disable tab
-
-import/export history
-sort out public/private/ret values on all methods
-
-
+Notes:
+https://www.ftc.gov/tips-advice/business-center/guidance/mobile-health-apps-interactive-tool
+https://www.termsfeed.com/blog/mobile-app-disclaimer/#:~:text=If%20you%20have%20any%20kind,you'll%20want%20to%20include.&text=If%20your%20medical%2Drelated%20content,be%20included%20in%20your%20disclaimer.
+https://www.disclaimergenerator.net/health-disclaimers/
+https://iproven.com/pages/app-medical-disclaimer
