@@ -10,6 +10,8 @@ save/cancel/reset settings buttons with warning
 inputs with validation
 prevent saving settings if inputs invalid
 prevent creating session if settings not valid?
+can display components be made function components?
+input components with validation
 
 active session has an interface.  Is it necessary?
 was there a singleton that might not be necessary?

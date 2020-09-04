@@ -1,4 +1,4 @@
-import { ILocalStorageService, LocalStorageService } from "./local-storage-service";
+import { ILocalStorageService } from "./local-storage-service";
 
 export interface ISettingsService {
   weeklyMax: number;
@@ -6,86 +6,116 @@ export interface ISettingsService {
   alcoholUnits: number;
   hours: number;
   consumptionRate: number;
+  historySessionsToKeep: number;
 }
 
+export interface IUpdateSettingsProps {
+  weeklyMax: number;
+  sessionMax: number;
+  alcoholUnits: number;
+  hours: number;
+  historySessionsToKeep: number;
+}
+
+const WeeklyMaxStorageKey = 'WeeklyMax';
+const SessionMaxStorageKey = 'SessionMax';
+const HoursStorageKey = 'HoursRate';
+const AlcoholUnitsStorageKey = 'AlcoholUnitsRate';
+const HistorySessionsToKeepStorageKey = 'HistorySessionsToKeep';
+
+const DefaultWeeklyMax = 14;
+const DefaultSessionMax = 4;
+const DefaultHours = 1;
+const DefaultAlcoholUnits = 2;
+const DefaultHistorySessionsToKeep = 60;
+
 class SettingsService implements ISettingsService {
-  private static _instance: SettingsService;
-  public readonly WeeklyMaxStorageKey = 'WeeklyMax';
-  public readonly SessionMaxStorageKey = 'SessionMax';
-  public readonly HoursStorageKey = 'HoursRate';
-  public readonly AlcoholUnitsStorageKey = 'AlcoholUnitsRate';
-  public readonly DefaultWeeklyMax = 14;
-  public readonly DefaultSessionMax = 4;
-  public readonly DefaultHours = 1;
-  public readonly DefaultAlcoholUnits = 2;
-  private _weeklyMax!: number;
-  private _sessionMax!: number;
-  private _alcoholUnits!: number;
-  private _hours!: number;
   private _storageService: ILocalStorageService;
 
-  private constructor(storageService: ILocalStorageService) {
+  private _weeklyMax: number = DefaultWeeklyMax;
+  private _sessionMax: number = DefaultSessionMax;
+  private _alcoholUnits: number = DefaultAlcoholUnits;
+  private _hours: number = DefaultHours;
+  private _historySessionsToKeep: number = DefaultHistorySessionsToKeep;
+
+  public constructor(storageService: ILocalStorageService) {
     this._storageService = storageService;
 
-    const weeklyMax = this._storageService.getNumber(this.WeeklyMaxStorageKey) || this.DefaultWeeklyMax;
-    this.weeklyMax = weeklyMax;
-
-    const sessionMax = this._storageService.getNumber(this.SessionMaxStorageKey) || this.DefaultSessionMax;
-    this.sessionMax = sessionMax;
-
-    const units = this._storageService.getNumber(this.AlcoholUnitsStorageKey) || this.DefaultAlcoholUnits;
-    this.alcoholUnits = units;
-
-    const hours = this._storageService.getNumber(this.HoursStorageKey) || this.DefaultHours;
-    this.hours = hours;
+    this.weeklyMax = this._storageService.getNumber(WeeklyMaxStorageKey) || DefaultWeeklyMax;
+    this.sessionMax = this._storageService.getNumber(SessionMaxStorageKey) || DefaultSessionMax;
+    this.alcoholUnits = this._storageService.getNumber(AlcoholUnitsStorageKey) || DefaultAlcoholUnits;
+    this.hours = this._storageService.getNumber(HoursStorageKey) || DefaultHours;
+    this.historySessionsToKeep = this._storageService.getNumber(HistorySessionsToKeepStorageKey) || DefaultHistorySessionsToKeep;
   }
 
-  public static getInstance(): SettingsService {
-    return SettingsService._instance ?? (SettingsService._instance = new SettingsService(new LocalStorageService()));
+  public updateSettings(updates: IUpdateSettingsProps) {
+    this.weeklyMax = updates.weeklyMax;
+    this.sessionMax = updates.sessionMax;
+    this.hours = updates.hours;
+    this.alcoholUnits = updates.alcoholUnits;
+    this.historySessionsToKeep = updates.historySessionsToKeep;
   }
 
-  get weeklyMax(): number {
+  public restoreDefaults() {
+    this.weeklyMax = DefaultWeeklyMax;
+    this.sessionMax = DefaultSessionMax;
+    this.alcoholUnits = DefaultAlcoholUnits;
+    this.hours = DefaultHours;
+    this.historySessionsToKeep = DefaultHistorySessionsToKeep;
+  }
+
+  public get weeklyMax(): number {
     return this._weeklyMax;
   }
 
-  set weeklyMax(value: number) {
+  public set weeklyMax(value: number) {
     if (value === this._weeklyMax) return;
     this._weeklyMax = value;
-    this._storageService.put(this.WeeklyMaxStorageKey, value);
+    this._storageService.put(WeeklyMaxStorageKey, value);
   }
 
-  get sessionMax(): number {
+  public get sessionMax(): number {
     return this._sessionMax;
   }
 
-  set sessionMax(value: number) {
+  public set sessionMax(value: number) {
     if (value === this._sessionMax) return;
     this._sessionMax = value;
-    this._storageService.put(this.SessionMaxStorageKey, value);
+    this._storageService.put(SessionMaxStorageKey, value);
   }
 
-  get hours(): number {
+  public get hours(): number {
     return this._hours;
   }
 
-  set hours(value: number) {
+  public set hours(value: number) {
     if (value === this._hours) return;
     this._hours = value;
-    this._storageService.put(this.HoursStorageKey, value);
+    this._storageService.put(HoursStorageKey, value);
   }
 
-  get alcoholUnits(): number {
+  public get alcoholUnits(): number {
     return this._alcoholUnits;
   }
 
-  set alcoholUnits(value: number) {
+  public set alcoholUnits(value: number) {
     if (value === this._alcoholUnits) return;
     this._alcoholUnits = value;
-    this._storageService.put(this.AlcoholUnitsStorageKey, value);
+    this._storageService.put(AlcoholUnitsStorageKey, value);
   }
 
-  get consumptionRate(): number {
+  public get consumptionRate(): number {
     return this.alcoholUnits / this.hours;
+  }
+
+  public set historySessionsToKeep(value: number) {
+    if (value === this._historySessionsToKeep) return;
+    this._historySessionsToKeep = value;
+    this._storageService.put(HistorySessionsToKeepStorageKey, value);
+  }
+
+  public get historySessionsToKeep(): number {
+    return this._historySessionsToKeep;
   }
 }
 

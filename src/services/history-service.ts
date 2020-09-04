@@ -18,9 +18,11 @@ const HistoryStorageKey = 'History';
 
 export class HistoryService {
   private _localStorageService: LocalStorageService;
+  private _sessionsToKeep: number;
 
-  constructor(localStorageService: LocalStorageService) {
+  constructor(localStorageService: LocalStorageService, sessionsToKeep: number) {
     this._localStorageService = localStorageService;
+    this._sessionsToKeep = sessionsToKeep;
   }
 
   public loadHistory(): History | null {
@@ -40,8 +42,11 @@ export class HistoryService {
   }
 
   public saveHistory(history: History): void {
+    const start = history.sessions.length > this._sessionsToKeep 
+      ? history.sessions.length - this._sessionsToKeep : 0;
+    const sessions = history.sessions.slice(start, history.sessions.length);
     const saveModel: IHistorySaveModel = {
-      historicSessions: history.sessions.map(session => ({
+      historicSessions: sessions.map(session => ({
         unitsConsumed: session.unitsConsumed,
         sessionMax: session.sessionMax,
         weeklyMax: session.sessionMax,
