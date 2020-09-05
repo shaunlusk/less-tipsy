@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { DateDisplay } from '../date-display/date-display';
 import { NumberDisplay } from '../number-display/number-display';
+import { FileService, IHistoricSessionExportModel } from '../../services/file-service';
 import './history-panel.scss';
 
 export interface IHistoryPanelSession {
@@ -17,6 +18,16 @@ export interface IHistoryPanelProps {
 }
 
 class HistoryPanel extends React.Component<IHistoryPanelProps, any> {
+  private exportHistory() {
+    FileService.exportHistory(this.props.sessions.map<IHistoricSessionExportModel>(session => ({
+      date: session.date,
+      sessionMax: session.sessionMax,
+      weeklyMax: session.weeklyMax,
+      rollingWeekly: session.rollingWeekly,
+      unitsConsumed: session.unitsConsumed
+    })));
+  }
+
   render() {
     let idx = 0;
     return <div>
@@ -38,7 +49,11 @@ class HistoryPanel extends React.Component<IHistoryPanelProps, any> {
           </React.Fragment>
         })}
         </div>
-        <div className="history-panel-buttons"><button disabled={this.props.sessions.length === 0} onClick={this.props.deleteHistory}>Delete History</button></div>
+        <div className="history-panel-buttons">
+          <button disabled={this.props.sessions.length === 0} onClick={this.props.deleteHistory}>Delete History</button>
+          <button disabled={this.props.sessions.length === 0} onClick={this.exportHistory.bind(this)}>Export History</button>
+        </div>
+
       </div>
   }
 }

@@ -1,11 +1,12 @@
-todo:
 
 Required:
 ---------
 about tab
 disclaimer
 sort out public/private/ret values on all methods
-import/export history
+import history
+move components to a react library
+move save file to slcommon
 
 Nice to have
 ------------
