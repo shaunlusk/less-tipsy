@@ -24,8 +24,9 @@ export interface ISessionService {
   saveSession(session: ActiveSession): void;
 }
 
+const ActiveSessionStorageKey = 'ActiveSession';
+
 export class SessionService {
-  public readonly ActiveSessionStorageKey = 'ActiveSession';
   private _localStorageService: LocalStorageService;
 
   public constructor(localStorageService: LocalStorageService) {
@@ -33,7 +34,7 @@ export class SessionService {
   }
 
   public loadSession(): ActiveSession | null {
-    const savedModel = this._localStorageService.getObject<IActiveSessionSaveModel>(this.ActiveSessionStorageKey);
+    const savedModel = this._localStorageService.getObject<IActiveSessionSaveModel>(ActiveSessionStorageKey);
     if (!savedModel) {
       return null;
     }
@@ -63,10 +64,10 @@ export class SessionService {
       date: session.date.toString(),
       targetHourlyRate: session.targetHourlyRate
     };
-    this._localStorageService.putObject<IActiveSessionSaveModel>(this.ActiveSessionStorageKey, saveModel);
+    this._localStorageService.putObject<IActiveSessionSaveModel>(ActiveSessionStorageKey, saveModel);
   }
 
   public deleteSession(): void {
-    this._localStorageService.remove(this.ActiveSessionStorageKey);
+    this._localStorageService.remove(ActiveSessionStorageKey);
   }
 }

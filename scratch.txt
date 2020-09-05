@@ -5,7 +5,6 @@ Required:
 about tab
 disclaimer
 sort out public/private/ret values on all methods
-standardize storage keys
 import/export history
 
 Nice to have
