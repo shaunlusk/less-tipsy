@@ -15,6 +15,7 @@ import { SessionService } from '../../services/session-service';
 import { HistoricalSession } from '../../model/historical-session';
 import { HistoryService } from '../../services/history-service';
 import { TrueFalseSelectionModal } from '../modal/modal-true-false-selection';
+import { IHistorySessionDto } from '../../model/history-session-dto';
 
 interface ISettingsState {
   sessionMax: string;
@@ -82,7 +83,7 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     this._history = this._loadHistory();
 
     this.state = {
-      activeTabLabel: 'Settings',
+      activeTabLabel: 'History',
       sessionState: this._activeSession ? this.getUpdatedSessionState() : null,
       history: this._history,
       showCancelSessionWarning: false,
@@ -338,6 +339,20 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     this._refreshSettings();
   }
 
+  public importHistory(sessions: IHistorySessionDto[]): void {
+    for (const session of sessions) {
+      this._history.addSession(new HistoricalSession(
+        session.unitsConsumed,
+        session.date,
+        session.sessionMax,
+        session.weeklyMax,
+        session.rollingWeekly
+      ));
+    }
+    this._history.sessions.sort((a, b) => a.date < b.date ? -1 : a.date === b.date ? 0 : 1);
+    this._refreshHistory();
+  }
+
   public render() {
     return <Tabs activeTabLabel={this.state.activeTabLabel} activeTabChanged={this.changeTab.bind(this)}>
       {this.state.sessionState ? 
@@ -389,7 +404,11 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
         onSaveSettings={this.handleSaveSettings.bind(this)}
       ></SettingsPanel></Tab>
       <Tab label="History">
-        <HistoryPanel sessions={this.state.history.sessions} deleteHistory={this.warnDeleteHistory.bind(this)}></HistoryPanel>
+        <HistoryPanel 
+          sessions={this.state.history.sessions} 
+          deleteHistory={this.warnDeleteHistory.bind(this)}
+          importHistory={this.importHistory.bind(this)}
+        ></HistoryPanel>
         <TrueFalseSelectionModal 
             title="Delete Session?"
             show={this.state.showDeleteHistoryWarning}

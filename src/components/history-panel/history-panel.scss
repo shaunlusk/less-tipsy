@@ -2,3 +2,14 @@
   display: grid;
   grid-template-columns: 100px auto auto auto auto;
 }
+
+.import-label {
+  cursor: pointer;
+  /* Style as you please, it will become the visible UI component. */
+}
+
+#upload-file {
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
+}
