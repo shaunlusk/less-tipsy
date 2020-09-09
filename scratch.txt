@@ -5,10 +5,7 @@ about tab
 disclaimer
 sort out public/private/ret values on all methods
 calculate rolling totals correctly
-fix wweekly max on history tab
 import history
-  import
-  merge
   check file type
   check header/version
   dialogue on fail

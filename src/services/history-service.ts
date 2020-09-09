@@ -57,7 +57,7 @@ export class HistoryService {
       historicSessions: sessions.map(session => ({
         unitsConsumed: session.unitsConsumed,
         sessionMax: session.sessionMax,
-        weeklyMax: session.sessionMax,
+        weeklyMax: session.weeklyMax,
         rollingWeekly: session.rollingWeekly,
         date: session.date.toString()
       }))
