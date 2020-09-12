@@ -84,11 +84,11 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
 
     this.state = {
       activeTabLabel: 'History',
-      sessionState: this._activeSession ? this.getUpdatedSessionState() : null,
+      sessionState: this._activeSession ? this._getUpdatedSessionState() : null,
       history: this._history,
       showCancelSessionWarning: false,
       showDeleteHistoryWarning: false,
-      settingsState: this.getSettingsStateFromService()
+      settingsState: this._getSettingsStateFromService()
     };
   }
 
@@ -108,28 +108,28 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
   private _refreshHistory(): void {
     this._historyService.saveHistory(this._history);
     this._history = this._loadHistory();
-    this.setState({history: this.getUpdatedHistorySate()});
+    this.setState({history: this._getUpdatedHistorySate()});
   }
 
   private _refreshSettings(): void {
-    const newSettingsState = this.getSettingsStateFromService();
+    const newSettingsState = this._getSettingsStateFromService();
     this.setState({settingsState: newSettingsState});
   }
 
-  public addDrink(drink: Drink): void {
+  private _addDrink(drink: Drink): void {
     if (!this._activeSession) {
       throw new Error('No Active Session.');
     }
     this._activeSession.addDrink(drink);
     this._sessionService.saveSession(this._activeSession);
-    this.setState({ sessionState: this.getUpdatedSessionState() }); 
+    this.setState({ sessionState: this._getUpdatedSessionState() }); 
   }
 
-  public changeTab(label: string) {
+  private _changeTab(label: string) {
     this.setState({activeTabLabel:label});
   }
 
-  private getUpdatedSessionState(): ISessionState {
+  private _getUpdatedSessionState(): ISessionState {
     if (!this._activeSession) {
       throw new Error('No Active Session.');
     }
@@ -149,7 +149,7 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     return sessionState;
   }
 
-  private getUpdatedHistorySate(): IHistoryState {
+  private _getUpdatedHistorySate(): IHistoryState {
     const sessions: IHistoricalSessionState[] = this._history.sessions.map(session => ({
       unitsConsumed: session.unitsConsumed,
       sessionMax: session.sessionMax,
@@ -160,7 +160,7 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     return {sessions};
   }
 
-  private beginNewSession(): void {
+  private _beginNewSession(): void {
     this._activeSession = new ActiveSession(
       this._settingsService.sessionMax, 
       this._settingsService.weeklyMax, 
@@ -170,11 +170,11 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
 
     this.setState({
       activeTabLabel:'Session',
-      sessionState: this.getUpdatedSessionState()
+      sessionState: this._getUpdatedSessionState()
     });
   }
 
-  private finishSession(): void {
+  private _finishSession(): void {
     if (!this._activeSession) {
       throw new Error('No Active Session.');
     }
@@ -194,11 +194,11 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     });
   }
 
-  public warnCancelSession(): void {
+  private _warnCancelSession(): void {
     this.setState({showCancelSessionWarning: true});
   }
 
-  public finishCancelSession(result: boolean): void {
+  private _finishCancelSession(result: boolean): void {
     if (result) {
       this._activeSession = new ActiveSession(
         this._settingsService.sessionMax, 
@@ -216,11 +216,11 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     }
   }
 
-  public warnDeleteHistory(): void {
+  private _warnDeleteHistory(): void {
     this.setState({showDeleteHistoryWarning: true});
   }
 
-  public finishDeleteHistory(result: boolean): void {
+  private _finishDeleteHistory(result: boolean): void {
     if (result) {
       this._historyService.deleteHistory();
       this._history = new History();
@@ -233,87 +233,87 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     }
   }
 
-  private areSettingsValid(newSettingsState: ISettingsState): boolean {
-    if (!this.hasValue(newSettingsState.weeklyMax) 
-      || !this.hasValue(newSettingsState.sessionMax)
-      || !this.hasValue(newSettingsState.units)
-      || !this.hasValue(newSettingsState.hours)
-      || !this.hasValue(newSettingsState.historySessionsToKeep)) {
+  private _areSettingsValid(newSettingsState: ISettingsState): boolean {
+    if (!this._hasValue(newSettingsState.weeklyMax) 
+      || !this._hasValue(newSettingsState.sessionMax)
+      || !this._hasValue(newSettingsState.units)
+      || !this._hasValue(newSettingsState.hours)
+      || !this._hasValue(newSettingsState.historySessionsToKeep)) {
       return false;
     }
 
     return true;
   }
 
-  private hasValue(value: string): boolean {
+  private _hasValue(value: string): boolean {
     return value !== null && value.trim().length > 0;
   }
 
-  private validateStateSettings(newSettingsState: ISettingsState) {
-    if (this.areSettingsValid(newSettingsState)) {
+  private _validateStateSettings(newSettingsState: ISettingsState) {
+    if (this._areSettingsValid(newSettingsState)) {
       newSettingsState.areInputsValid = true;
     } else {
       newSettingsState.areInputsValid = false;
     }
   }
 
-  public handleChangeSettingSessionMax(value: string): void {
+  private _handleChangeSettingSessionMax(value: string): void {
     const newSettingsState: ISettingsState = {...this.state.settingsState, sessionMax: value};
     if (value !== this.state.settingsState.sessionMax) {
       newSettingsState.changesExist = true;
     }
-    this.validateStateSettings(newSettingsState);
+    this._validateStateSettings(newSettingsState);
     this.setState({settingsState: newSettingsState});
   }
 
-  public handleChangeSettingWeeklyMax(value: string): void {
+  private _handleChangeSettingWeeklyMax(value: string): void {
     const newSettingsState: ISettingsState = {...this.state.settingsState, weeklyMax: value};
     if (value !== this.state.settingsState.weeklyMax) {
       newSettingsState.changesExist = true;
     }
-    this.validateStateSettings(newSettingsState);
+    this._validateStateSettings(newSettingsState);
     this.setState({settingsState: newSettingsState});
   }
 
-  public handleChangeSettingUnits(value: string): void {
+  private _handleChangeSettingUnits(value: string): void {
     const newSettingsState: ISettingsState = {...this.state.settingsState, units: value};
     if (value !== this.state.settingsState.units) {
       newSettingsState.changesExist = true;
     }
-    this.validateStateSettings(newSettingsState);
+    this._validateStateSettings(newSettingsState);
     this.setState({settingsState: newSettingsState});
   }
 
-  public handleChangeSettingHours(value: string): void {
+  private _handleChangeSettingHours(value: string): void {
     const newSettingsState: ISettingsState = {...this.state.settingsState, hours: value};
     if (value !== this.state.settingsState.hours) {
       newSettingsState.changesExist = true;
     }
-    this.validateStateSettings(newSettingsState);
+    this._validateStateSettings(newSettingsState);
     this.setState({settingsState: newSettingsState});
   }
 
-  public handleChangeSettingHistorySessions(value: string): void {
+  private _handleChangeSettingHistorySessions(value: string): void {
     const newSettingsState: ISettingsState = {...this.state.settingsState, historySessionsToKeep: value};
     if (value !== this.state.settingsState.historySessionsToKeep) {
       newSettingsState.changesExist = true;
     }
-    this.validateStateSettings(newSettingsState);
+    this._validateStateSettings(newSettingsState);
     this.setState({settingsState: newSettingsState});
   }
 
-  public handleCancelSettingsChanges(): void {
+  private _handleCancelSettingsChanges(): void {
     this._refreshSettings();
   }
 
-  public handleRestoreDefaultSettings(): void {
+  private _handleRestoreDefaultSettings(): void {
     this.props.settingsService.restoreDefaults();
     this._historyService.sessionsToKeep = this.props.settingsService.historySessionsToKeep;
-    const newSettingsState = this.getSettingsStateFromService();
+    const newSettingsState = this._getSettingsStateFromService();
     this.setState({settingsState: newSettingsState});
   }
 
-  private getSettingsStateFromService(): ISettingsState {
+  private _getSettingsStateFromService(): ISettingsState {
     return {
       weeklyMax: this._settingsService.weeklyMax.toString(),
       sessionMax: this._settingsService.sessionMax.toString(),
@@ -325,7 +325,7 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     };
   }
   
-  public handleSaveSettings(): void {
+  private _handleSaveSettings(): void {
     const sessionsToKeep = parseInt(this.state.settingsState.historySessionsToKeep);
     this._settingsService.updateSettings({
       weeklyMax: parseFloat(this.state.settingsState.weeklyMax),
@@ -339,7 +339,7 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     this._refreshSettings();
   }
 
-  public importHistory(sessions: IHistorySessionDto[]): void {
+  private _importHistory(sessions: IHistorySessionDto[]): void {
     for (const session of sessions) {
       this._history.addSession(new HistoricalSession(
         session.unitsConsumed,
@@ -354,13 +354,13 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
   }
 
   public render() {
-    return <Tabs activeTabLabel={this.state.activeTabLabel} activeTabChanged={this.changeTab.bind(this)}>
+    return <Tabs activeTabLabel={this.state.activeTabLabel} activeTabChanged={this._changeTab.bind(this)}>
       {this.state.sessionState ? 
         <Tab label="Session">
           <ActiveSessionPanel 
-            addDrink={this.addDrink.bind(this)}
-            finishSession={this.finishSession.bind(this)}
-            cancelSession={this.warnCancelSession.bind(this)}
+            addDrink={this._addDrink.bind(this)}
+            finishSession={this._finishSession.bind(this)}
+            cancelSession={this._warnCancelSession.bind(this)}
             lastDrink={this.state.sessionState.lastDrink}
             nextDrinkTime={this.state.sessionState.nextDrinkTime}
             sessionTotal={this.state.sessionState.sessionTotal}
@@ -378,13 +378,13 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
             show={this.state.showCancelSessionWarning}
             acceptText="Cancel Session" 
             rejectText="Keep Current Session" 
-            handleClose={this.finishCancelSession.bind(this)}
+            handleClose={this._finishCancelSession.bind(this)}
           >
             Are you sure you want to cancel the current session?  This cannot be undone!
           </TrueFalseSelectionModal>
         </Tab>
       : <Tab label="Session">
-          <NoSessionPanel onBeginNewSession={this.beginNewSession.bind(this)}></NoSessionPanel>
+          <NoSessionPanel onBeginNewSession={this._beginNewSession.bind(this)}></NoSessionPanel>
         </Tab> }
       <Tab label="Settings"><SettingsPanel 
         sessionMax={this.state.settingsState.sessionMax}
@@ -394,27 +394,27 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
         historySessionsToKeep={this.state.settingsState.historySessionsToKeep}
         changesExist={this.state.settingsState.changesExist}
         areInputsValid={this.state.settingsState.areInputsValid}
-        onChangeSessionMax={this.handleChangeSettingSessionMax.bind(this)}
-        onChangeWeeklyMax={this.handleChangeSettingWeeklyMax.bind(this)}
-        onChangeUnits={this.handleChangeSettingUnits.bind(this)}
-        onChangeHours={this.handleChangeSettingHours.bind(this)}
-        onChangeHistorySessions={this.handleChangeSettingHistorySessions.bind(this)}
-        onCancelChanges={this.handleCancelSettingsChanges.bind(this)}
-        onRestoreDefaults={this.handleRestoreDefaultSettings.bind(this)}
-        onSaveSettings={this.handleSaveSettings.bind(this)}
+        onChangeSessionMax={this._handleChangeSettingSessionMax.bind(this)}
+        onChangeWeeklyMax={this._handleChangeSettingWeeklyMax.bind(this)}
+        onChangeUnits={this._handleChangeSettingUnits.bind(this)}
+        onChangeHours={this._handleChangeSettingHours.bind(this)}
+        onChangeHistorySessions={this._handleChangeSettingHistorySessions.bind(this)}
+        onCancelChanges={this._handleCancelSettingsChanges.bind(this)}
+        onRestoreDefaults={this._handleRestoreDefaultSettings.bind(this)}
+        onSaveSettings={this._handleSaveSettings.bind(this)}
       ></SettingsPanel></Tab>
       <Tab label="History">
         <HistoryPanel 
           sessions={this.state.history.sessions} 
-          deleteHistory={this.warnDeleteHistory.bind(this)}
-          importHistory={this.importHistory.bind(this)}
+          deleteHistory={this._warnDeleteHistory.bind(this)}
+          importHistory={this._importHistory.bind(this)}
         ></HistoryPanel>
         <TrueFalseSelectionModal 
             title="Delete Session?"
             show={this.state.showDeleteHistoryWarning}
             acceptText="Delete History" 
             rejectText="Keep History" 
-            handleClose={this.finishDeleteHistory.bind(this)}
+            handleClose={this._finishDeleteHistory.bind(this)}
           >
             Are you sure you want to delete the <b>entire</b> history?  This cannot be undone!
           </TrueFalseSelectionModal>

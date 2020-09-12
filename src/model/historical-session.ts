@@ -6,7 +6,7 @@ export class HistoricalSession {
   private _rollingWeekly: number;
   private _date: Date;
 
-  constructor(
+  public constructor(
     unitsConsumed: number, 
     date: Date, 
     sessionMax: number, 

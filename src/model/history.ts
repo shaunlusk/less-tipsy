@@ -3,7 +3,7 @@ import { HistoricalSession } from "./historical-session";
 export class History {
   private _sessions: HistoricalSession[];
 
-  constructor(sessions?: HistoricalSession[]) {
+  public constructor(sessions?: HistoricalSession[]) {
     this._sessions = sessions || [];
   }
 

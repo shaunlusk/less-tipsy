@@ -8,7 +8,7 @@ export class ActiveSession {
   private _date: Date = new Date();
   private _targetHourlyRate: number;
 
-  constructor(sessionMax: number, weeklyMax: number, rollingWeeklyTotal: number, targetHourlyRate: number) {
+  public constructor(sessionMax: number, weeklyMax: number, rollingWeeklyTotal: number, targetHourlyRate: number) {
     this._sessionMax = sessionMax;
     this._weeklyMax = weeklyMax;
     this._rollingWeeklyTotal = rollingWeeklyTotal;

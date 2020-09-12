@@ -9,7 +9,7 @@ export interface ITabsProps {
 
 class Tabs extends React.Component<ITabsProps, any> {
 
-  setActiveTab(tab: React.ReactComponentElement<typeof Tab>) {
+  private _setActiveTab(tab: React.ReactComponentElement<typeof Tab>) {
     if (this.props.activeTabChanged) {
       this.props.activeTabChanged(tab.props.label, tab);
     }
@@ -23,7 +23,7 @@ class Tabs extends React.Component<ITabsProps, any> {
       <div className="tab-headers">
         {this.props.children.map(tab => 
           <span key={"tab-header-" + tab.props.label} className={"tab-header " + (tab === activeTab ? "active-tab-header" : "")}
-            onClick={() => this.setActiveTab(tab)}
+            onClick={() => this._setActiveTab(tab)}
           >
             {tab.props.label}
           </span>

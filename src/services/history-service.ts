@@ -20,7 +20,7 @@ export class HistoryService {
   private _localStorageService: LocalStorageService;
   private _sessionsToKeep: number;
 
-  constructor(localStorageService: LocalStorageService, sessionsToKeep: number) {
+  public constructor(localStorageService: LocalStorageService, sessionsToKeep: number) {
     this._localStorageService = localStorageService;
     this._sessionsToKeep = sessionsToKeep;
   }

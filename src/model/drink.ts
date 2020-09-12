@@ -8,7 +8,7 @@ export class Drink {
   private _abv: number;
   private _time: Date;
   
-  constructor(volume: number, volumeUnit: VolumeUnit, abv: number, time?: Date) {
+  public constructor(volume: number, volumeUnit: VolumeUnit, abv: number, time?: Date) {
     this._volume = volume;
     this._volumeUnit = volumeUnit;
     this._abv = abv;

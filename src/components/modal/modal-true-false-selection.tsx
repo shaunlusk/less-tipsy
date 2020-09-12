@@ -10,12 +10,12 @@ export interface ITrueFalseSelectionModalProps {
 }
 
 export class TrueFalseSelectionModal extends React.Component<ITrueFalseSelectionModalProps, any> {
-  private showHideClassName(): string {
+  private _showHideClassName(): string {
     return this.props.show ? 'modal display-block' : 'modal display-none';
   }
 
   public render() {
-    return <div className={this.showHideClassName()}>
+    return <div className={this._showHideClassName()}>
         <div className="modal-main">
           <div className="modal-title">{this.props.title}</div>
           <div className="modal-content">{this.props.children}</div>

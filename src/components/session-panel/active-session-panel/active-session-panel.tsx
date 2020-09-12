@@ -38,40 +38,40 @@ export class ActiveSessionPanel extends React.Component<IActiveSessionPanelProps
     };
   }
 
-  public handleChangeVolume(value: string): void {
+  private _handleChangeVolume(value: string): void {
     this.setState({currentVolume: value});
   }
   
-  public handleChangeUnit(value: string): void {
+  private _handleChangeUnit(value: string): void {
     const unit = value as keyof typeof VolumeUnit;
     this.setState({currentVolumeUnit: VolumeUnit[unit]});
   }
 
-  public handleChangeAbv(value: string): void {
+  private _handleChangeAbv(value: string): void {
     this.setState({currentAbv: value});
   }
 
-  public addDrink() {
-    if (!this.formIsValid()) return;
+  private _addDrink() {
+    if (!this._formIsValid()) return;
     const volume = parseFloat(this.state.currentVolume);
     const abv = parseFloat(this.state.currentAbv);
     const drink = new Drink(volume, this.state.currentVolumeUnit, abv);
     this.props.addDrink(drink);
   }
 
-  public formIsValid() {
-    return this.isvolumeValid() && this.isAbvValid();
+  private _formIsValid() {
+    return this._isvolumeValid() && this._isAbvValid();
   }
 
-  public isvolumeValid(): boolean {
+  private _isvolumeValid(): boolean {
     return this.state.currentVolume !== null && this.state.currentVolume.trim().length > 0;
   }
 
-  public isAbvValid(): boolean {
+  private _isAbvValid(): boolean {
     return this.state.currentAbv !== null && this.state.currentAbv.trim().length > 0;
   }
 
-  public cancelSession(): void {
+  private _cancelSession(): void {
     this.props.cancelSession();
   }
 
@@ -88,9 +88,9 @@ export class ActiveSessionPanel extends React.Component<IActiveSessionPanelProps
         min={1}
         max={1750}
         name="volume"
-        onChange={e => this.handleChangeVolume(e.target.value)}
+        onChange={e => this._handleChangeVolume(e.target.value)}
       ></input>
-        <select value={this.state.currentVolumeUnit} onChange={e => this.handleChangeUnit(e.target.value)}>
+        <select value={this.state.currentVolumeUnit} onChange={e => this._handleChangeUnit(e.target.value)}>
           <option value={VolumeUnit.Ounces}>Ounces</option>
           <option value={VolumeUnit.Milliliters}>Milliliters</option>
         </select>
@@ -102,10 +102,10 @@ export class ActiveSessionPanel extends React.Component<IActiveSessionPanelProps
           min={0.1}
           max={99.9}
           name="maxPerWeekInput"
-          onChange={e => this.handleChangeAbv(e.target.value)}
+          onChange={e => this._handleChangeAbv(e.target.value)}
         ></input>
       <div>
-        <button onClick={this.addDrink.bind(this)}>Add</button>
+        <button onClick={this._addDrink.bind(this)}>Add</button>
       </div>
       <div>Last Drink</div>
       <div>{this.props.lastDrink 
@@ -129,7 +129,7 @@ export class ActiveSessionPanel extends React.Component<IActiveSessionPanelProps
       <div><NumberDisplay number={this.props.rollingWeeklyRemaining} decimalPlaces={1}></NumberDisplay></div>
       <div>
         <button onClick={this.props.finishSession}>Finish Session</button>
-        <button onClick={this.cancelSession.bind(this)}>Cancel Session</button>
+        <button onClick={this._cancelSession.bind(this)}>Cancel Session</button>
       </div>
     </div>
   }

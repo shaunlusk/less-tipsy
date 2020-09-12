@@ -8,7 +8,7 @@ export class Initializer {
   private _sessionService: SessionService;
   private _historyService: HistoryService;
 
-  constructor() {
+  public constructor() {
     const localStorageService = new LocalStorageService();
     this._sessionService = new SessionService(localStorageService);
     this._settingsService = new SettingsService(localStorageService);

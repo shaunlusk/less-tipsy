@@ -21,14 +21,14 @@ export interface IHistoryPanelProps {
 
 class HistoryPanel extends React.Component<IHistoryPanelProps, any> {
 
-  private importHistory(file: File) {
+  private _importHistory(file: File) {
     FileService.importHistory(file).then(sessions => {
       if (!sessions) return;
       this.props.importHistory(sessions);
     }).catch(err => console.log(err));
   }
 
-  private exportHistory() {
+  private _exportHistory() {
     FileService.exportHistory(this.props.sessions.map<IHistorySessionDto>(session => ({
       date: session.date,
       sessionMax: session.sessionMax,
@@ -38,7 +38,7 @@ class HistoryPanel extends React.Component<IHistoryPanelProps, any> {
     })));
   }
 
-  render() {
+  public render() {
     let idx = 0;
     return <div>
         <h3>History</h3>
@@ -61,9 +61,9 @@ class HistoryPanel extends React.Component<IHistoryPanelProps, any> {
         </div>
         <div className="history-panel-buttons">
           <button disabled={this.props.sessions.length === 0} onClick={this.props.deleteHistory}>Delete History</button>
-          <button disabled={this.props.sessions.length === 0} onClick={this.exportHistory.bind(this)}>Export History</button>
+          <button disabled={this.props.sessions.length === 0} onClick={this._exportHistory.bind(this)}>Export History</button>
           <label className="import-label" htmlFor="upload-file">Import History</label>
-          <input type="file" name="photo" id="upload-file" onChange={(event) => this.importHistory(event.target.files![0])}/>
+          <input type="file" name="photo" id="upload-file" onChange={(event) => this._importHistory(event.target.files![0])}/>
         </div>
 
       </div>
