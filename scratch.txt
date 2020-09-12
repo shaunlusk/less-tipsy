@@ -3,7 +3,6 @@ Required:
 ---------
 about tab
 disclaimer
-sort out public/private/ret values on all methods
 calculate rolling totals correctly
 import history
   check file type
