@@ -3,12 +3,10 @@ Required:
 ---------
 about tab
 disclaimer
-calculate rolling totals correctly
+calculate rolling hourly correctly
 import history
-  check file type
   check header/version
   dialogue on fail
-  toast on success
   
 move components to a react library
 move save file to slcommon
@@ -25,6 +23,9 @@ better ways of calculating next drink time
 auto convert volume on unit change
 validation class
 other ways of cleaning up main panel code
+toast component
+import history
+  toast on success
 
 Maybe?
 ------

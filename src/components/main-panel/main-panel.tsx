@@ -164,7 +164,7 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     this._activeSession = new ActiveSession(
       this._settingsService.sessionMax, 
       this._settingsService.weeklyMax, 
-      0,
+      this._getRollingWeeklyTotal(),
       this._settingsService.consumptionRate);
     this._sessionService.saveSession(this._activeSession);
 
@@ -172,6 +172,20 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
       activeTabLabel:'Session',
       sessionState: this._getUpdatedSessionState()
     });
+  }
+
+  private _getRollingWeeklyTotal(): number {
+    let rollingWeeklyTotal = 0;
+    const sixDays = 1000 * 60 * 60 * 24 * 6;
+    const pastWeek = new Date(Date.now() - sixDays);
+    let idx = this._history.sessions.length - 1;
+    while (idx >= 0) {
+      const session = this._history.sessions[idx];
+      if (session.date < pastWeek) break;
+      rollingWeeklyTotal += session.unitsConsumed;
+      idx--;
+    }
+    return rollingWeeklyTotal;
   }
 
   private _finishSession(): void {

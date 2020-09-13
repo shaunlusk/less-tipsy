@@ -63,7 +63,7 @@ class HistoryPanel extends React.Component<IHistoryPanelProps, any> {
           <button disabled={this.props.sessions.length === 0} onClick={this.props.deleteHistory}>Delete History</button>
           <button disabled={this.props.sessions.length === 0} onClick={this._exportHistory.bind(this)}>Export History</button>
           <label className="import-label" htmlFor="upload-file">Import History</label>
-          <input type="file" name="photo" id="upload-file" onChange={(event) => this._importHistory(event.target.files![0])}/>
+          <input type="file" name="file" id="upload-file" accept=".csv" onChange={(event) => this._importHistory(event.target.files![0])}/>
         </div>
 
       </div>
