@@ -176,8 +176,8 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
 
   private _getRollingWeeklyTotal(): number {
     let rollingWeeklyTotal = 0;
-    const sixDays = 1000 * 60 * 60 * 24 * 6;
-    const pastWeek = new Date(Date.now() - sixDays);
+    const week = 1000 * 60 * 60 * 24 * 7;
+    const pastWeek = new Date(Date.now() - week);
     let idx = this._history.sessions.length - 1;
     while (idx >= 0) {
       const session = this._history.sessions[idx];

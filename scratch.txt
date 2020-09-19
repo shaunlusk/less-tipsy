@@ -3,11 +3,12 @@ Required:
 ---------
 about tab
 disclaimer
-calculate rolling hourly correctly
+
 import history
+  fix empty line parsing
+  other fail checking
   check header/version
   dialogue on fail
-  
 move components to a react library
 move save file to slcommon
 
@@ -26,6 +27,7 @@ other ways of cleaning up main panel code
 toast component
 import history
   toast on success
+check - calculate rolling hourly correctly?
 
 Maybe?
 ------

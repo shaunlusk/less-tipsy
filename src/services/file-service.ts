@@ -1,6 +1,8 @@
 import { saveFile } from '../utils/save-file';
 import { IHistorySessionDto } from '../model/history-session-dto';
 
+const ErrMessage = 'Import csv was not valid.';
+
 export class FileService {
   public static exportHistory(sessions: IHistorySessionDto[]): void {
     const data = this.historyToData(sessions);
@@ -14,17 +16,35 @@ export class FileService {
   }
 
   private static dataToHistory(data: string): IHistorySessionDto[] {
-    const lines = data.split('\n');
+    const lines = data.trim().split('\n');
     // discard header
     lines.splice(0, 1);
+    console.log(lines.length);
     const historySessions: IHistorySessionDto[] = lines.map(line => {
-      const tokens = line.split(',');
+      const tokens = line.trim().split(',');
+      console.log(tokens.length);
+      if (tokens.length === 0) {
+        throw new Error(ErrMessage);
+      }
+      const unitsConsumed = parseFloat(tokens[1]);
+      const sessionMax = parseFloat(tokens[2]);
+      const rollingWeekly = parseFloat(tokens[3]);
+      const weeklyMax = parseFloat(tokens[4]);
+
+      if (isNaN(unitsConsumed) 
+        || isNaN(sessionMax)
+        || isNaN(rollingWeekly)
+        || isNaN(weeklyMax)
+      ) {
+        throw new Error(ErrMessage);
+      }
+
       return {
         date: new Date(tokens[0]),
-        unitsConsumed: parseFloat(tokens[1]),
-        sessionMax: parseFloat(tokens[2]),
-        rollingWeekly: parseFloat(tokens[1]),
-        weeklyMax: parseFloat(tokens[1]),
+        unitsConsumed,
+        sessionMax,
+        rollingWeekly,
+        weeklyMax,
       };
     });
     return historySessions;
