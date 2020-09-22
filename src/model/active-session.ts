@@ -19,6 +19,10 @@ export class ActiveSession {
     this._drinks.push(drink);
   }
 
+  public deleteLast(): void {
+    this._drinks.splice(this._drinks.length - 1, 1);
+  }
+
   public get drinks(): Drink[] {
     return this._drinks;
   }

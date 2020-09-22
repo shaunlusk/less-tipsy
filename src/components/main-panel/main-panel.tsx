@@ -367,6 +367,12 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     this._refreshHistory();
   }
 
+  private _handleDeleteLastDrink(): void {
+    this._activeSession?.deleteLast();
+    const newSessionState = this._getUpdatedSessionState();
+    this.setState({sessionState: newSessionState});
+  }
+
   public render() {
     return <Tabs activeTabLabel={this.state.activeTabLabel} activeTabChanged={this._changeTab.bind(this)}>
       {this.state.sessionState ? 
@@ -385,6 +391,7 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
             lastVolume={this.state.sessionState.lastVolume}
             lastAbv={this.state.sessionState.lastAbv}
             lastVolumeUnit={this.state.sessionState.lastVolumeUnit}
+            deleteLastDrink={this._handleDeleteLastDrink.bind(this)}
           >
           </ActiveSessionPanel>
           <TrueFalseSelectionModal 

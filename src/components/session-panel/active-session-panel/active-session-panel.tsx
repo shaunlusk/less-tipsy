@@ -9,6 +9,7 @@ export interface IActiveSessionPanelProps {
   addDrink(drink: Drink): void;
   finishSession(): void;
   cancelSession(): void;
+  deleteLastDrink(): void;
   lastDrink: Drink | null;
   nextDrinkTime: Date | null;
   sessionTotal: number;
@@ -101,6 +102,7 @@ export class ActiveSessionPanel extends React.Component<IActiveSessionPanelProps
           size={5} 
           min={0.1}
           max={99.9}
+          step={0.5}
           name="maxPerWeekInput"
           onChange={e => this._handleChangeAbv(e.target.value)}
         ></input>
@@ -109,7 +111,7 @@ export class ActiveSessionPanel extends React.Component<IActiveSessionPanelProps
       </div>
       <div>Last Drink</div>
       <div>{this.props.lastDrink 
-        ? <LastDrinkDisplay drink={this.props.lastDrink}></LastDrinkDisplay>
+        ? <LastDrinkDisplay deleteDrink={this.props.deleteLastDrink} drink={this.props.lastDrink}></LastDrinkDisplay>
         : <span>--</span>}
       </div>
       <div>Next Drink</div>
