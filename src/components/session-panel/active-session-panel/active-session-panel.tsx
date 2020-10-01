@@ -10,6 +10,11 @@ export interface IActiveSessionPanelProps {
   finishSession(): void;
   cancelSession(): void;
   deleteLastDrink(): void;
+  updateLastAbv(abv: string): void;
+  updateLastVolume(volume: string): void;
+  updateLastVolumeUnit(volumeUnit: string): void;
+  saveLastDrinkChanges(): void;
+  cancelLastDrinkChanges(): void;
   lastDrink: Drink | null;
   nextDrinkTime: Date | null;
   sessionTotal: number;
@@ -111,7 +116,19 @@ export class ActiveSessionPanel extends React.Component<IActiveSessionPanelProps
       </div>
       <div>Last Drink</div>
       <div>{this.props.lastDrink 
-        ? <LastDrinkDisplay deleteDrink={this.props.deleteLastDrink} drink={this.props.lastDrink}></LastDrinkDisplay>
+        ? <LastDrinkDisplay 
+            deleteDrink={this.props.deleteLastDrink} 
+            drink={this.props.lastDrink}
+            abv={this.props.}
+            volume={this.state.currentVolume}
+            volumeUnit={this.state.currentVolumeUnit}
+            editting={true}
+            onChangeAbv={this.props.updateLastAbv}
+            onChangeVolume={this.props.updateLastAbv}
+            onChangeUnit={this.props.updateLastAbv}
+            onSaveChanges={this.props.saveLastDrinkChanges}
+            onCancelChanges={this.props.saveLastDrinkChanges}
+            ></LastDrinkDisplay>
         : <span>--</span>}
       </div>
       <div>Next Drink</div>

@@ -23,6 +23,10 @@ export class ActiveSession {
     this._drinks.splice(this._drinks.length - 1, 1);
   }
 
+  public updateLastDrink(drink: Drink) {
+    this._drinks[this._drinks.length - 1] = drink;
+  }
+
   public get drinks(): Drink[] {
     return this._drinks;
   }

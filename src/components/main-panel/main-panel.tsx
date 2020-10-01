@@ -35,8 +35,8 @@ interface ISessionState {
   hourlyRate: number;
   rollingWeeklyTotal: number;
   rollingWeeklyRemaining: number;
-  lastVolume: number;
-  lastAbv: number;
+  lastVolume: string;
+  lastAbv: string;
   lastVolumeUnit: VolumeUnit;
 }
 
@@ -52,6 +52,12 @@ interface IHistoryState {
   sessions: IHistoricalSessionState[];
 }
 
+interface IEditLastDrinkState {
+  lastAbv: string;
+  lastVolume: string;
+  lastVolumeUnit: string;
+}
+
 interface IMainPanelState {
   activeTabLabel: string;
   settingsState: ISettingsState;
@@ -59,6 +65,8 @@ interface IMainPanelState {
   history: IHistoryState;
   showCancelSessionWarning: boolean;
   showDeleteHistoryWarning: boolean;
+  isEdittingLastDrink: boolean;
+  lastDrinkState: IEditLastDrinkState | null;
 }
 
 export interface IMainPanelProps {
@@ -88,7 +96,9 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
       history: this._history,
       showCancelSessionWarning: false,
       showDeleteHistoryWarning: false,
-      settingsState: this._getSettingsStateFromService()
+      settingsState: this._getSettingsStateFromService(),
+      isEdittingLastDrink: false,
+      lastDrinkState: this._getLastDrinkState()
     };
   }
 
@@ -368,9 +378,70 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
   }
 
   private _handleDeleteLastDrink(): void {
-    this._activeSession?.deleteLast();
+    const session = this._activeSession!;
+    session.deleteLast();
+    this._sessionService.saveSession(session);
     const newSessionState = this._getUpdatedSessionState();
     this.setState({sessionState: newSessionState});
+  }
+
+  private _noSessionOrNoLastDrink() {
+    return this._activeSession === null || this._activeSession.lastDrink === null;
+  }
+
+  private _handleUpdateLastAbv(abv: string): void {
+    if (this._noSessionOrNoLastDrink()) return;
+    const session = this._activeSession!;
+    const lastDrink = session.lastDrink!;
+    const lastDrinkState: IEditLastDrinkState = {
+      lastAbv: abv,
+      lastVolume: lastDrink.volume.toString(),
+      lastVolumeUnit: lastDrink.volumeUnit
+    };
+    this.setState({ lastDrinkState: lastDrinkState }); 
+  }
+
+  private _handleUpdateLastVolume(volume: string): void {
+    if (this._noSessionOrNoLastDrink()) return;
+    const session = this._activeSession!;
+    const lastDrink = session.lastDrink!;
+    const lastDrinkState: IEditLastDrinkState = {
+      lastAbv: lastDrink.abv.toString(),
+      lastVolume: volume,
+      lastVolumeUnit: lastDrink.volumeUnit
+    };
+    this.setState({ lastDrinkState: lastDrinkState }); 
+  }
+
+  private _handleUpdateLastVolumeUnit(volueUnit: string): void {
+    if (this._noSessionOrNoLastDrink()) return;
+    const session = this._activeSession!;
+    const lastDrink = session.lastDrink!;
+    const unit = volueUnit as keyof typeof VolumeUnit;
+    const lastDrinkState: IEditLastDrinkState = {
+      lastAbv: lastDrink.abv.toString(),
+      lastVolume: lastDrink.volume.toString(),
+      lastVolumeUnit: VolumeUnit[unit]
+    };
+    this.setState({ lastDrinkState: lastDrinkState }); 
+  }
+
+  private _handleSaveLastDrinkChanges(): void {
+    
+  }
+
+  private _handleCancelLastDrinkChanges(): void {
+    
+  }
+
+  private _getLastDrinkState(): IEditLastDrinkState | null {
+    if (!this._activeSession || !this._activeSession.lastDrink) return null;
+    const lastDrink = this._activeSession.lastDrink;
+    return {
+      lastAbv: lastDrink.abv.toString(),
+      lastVolume: lastDrink.volume.toString(),
+      lastVolumeUnit: lastDrink.volumeUnit.toString()
+    };
   }
 
   public render() {
@@ -392,6 +463,11 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
             lastAbv={this.state.sessionState.lastAbv}
             lastVolumeUnit={this.state.sessionState.lastVolumeUnit}
             deleteLastDrink={this._handleDeleteLastDrink.bind(this)}
+            updateLastAbv={this._handleUpdateLastAbv.bind(this)}
+            updateLastVolume={this._handleUpdateLastVolume.bind(this)}
+            updateLastVolumeUnit={this._handleUpdateLastVolumeUnit.bind(this)}
+            saveLastDrinkChanges={this._handleSaveLastDrinkChanges.bind(this)}
+            cancelLastDrinkChanges={this._handleCancelLastDrinkChanges.bind(this)}
           >
           </ActiveSessionPanel>
           <TrueFalseSelectionModal 
