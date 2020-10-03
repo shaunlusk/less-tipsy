@@ -55,7 +55,7 @@ export class FileService {
   }
 
   public static importHistory(file: File): Promise<IHistorySessionDto[]|void> {
-    return file.text().then(text => {
+    return file.text().then((text: string) => {
         return this.dataToHistory(text);
       });
   }
