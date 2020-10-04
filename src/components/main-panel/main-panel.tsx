@@ -14,7 +14,7 @@ import { NoSessionPanel } from '../session-panel/no-session-panel/no-session-pan
 import { SessionService } from '../../services/session-service';
 import { HistoricalSession } from '../../model/historical-session';
 import { HistoryService } from '../../services/history-service';
-import { TrueFalseSelectionModal } from '../modal/modal-true-false-selection';
+import { TrueFalseSelectionModal } from '../modal/modal-true-false-selection/modal-true-false-selection';
 import { IHistorySessionDto } from '../../model/history-session-dto';
 
 interface ISettingsState {
