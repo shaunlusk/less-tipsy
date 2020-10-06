@@ -22,19 +22,22 @@ export interface IHistoryPanelProps {
 
 interface IHistoryPanelState {
   showImportFailedModal: boolean;
+  showImportSuccessModal: boolean;
 }
 
 class HistoryPanel extends React.Component<IHistoryPanelProps, IHistoryPanelState> {
   public constructor(props: IHistoryPanelProps) {
     super(props);
     this.state = {
-      showImportFailedModal: false
+      showImportFailedModal: false,
+      showImportSuccessModal: false
     };
   }
 
   private _importHistory(file: File) {
     FileService.importHistory(file).then(sessions => {
       if (!sessions) return;
+      this._showImportSuccessModal();
       this.props.importHistory(sessions);
     }).catch(err => {
       console.error(err);
@@ -58,6 +61,14 @@ class HistoryPanel extends React.Component<IHistoryPanelProps, IHistoryPanelStat
 
   private _hideImportFailedModal() {
     this.setState({showImportFailedModal: false});
+  }
+
+  private _showImportSuccessModal() {
+    this.setState({showImportSuccessModal: true});
+  }
+
+  private _hideImportSuccessModal() {
+    this.setState({showImportSuccessModal: false});
   }
 
   public render() {
@@ -93,6 +104,12 @@ class HistoryPanel extends React.Component<IHistoryPanelProps, IHistoryPanelStat
           buttonText="Ok" 
           handleClose={this._hideImportFailedModal.bind(this)}
         >Import file format was not valid.</Modal>
+        <Modal
+          title="Import Success"
+          show={this.state.showImportSuccessModal}
+          buttonText="Ok" 
+          handleClose={this._hideImportSuccessModal.bind(this)}
+        >History import was successful.</Modal>
       </div>
   }
 }
