@@ -4,8 +4,6 @@ Required:
 about tab
 disclaimer
 
-import history
-  dialogue on fail
 move components to a react library
 move save file to slcommon
 

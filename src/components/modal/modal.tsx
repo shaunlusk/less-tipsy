@@ -1,10 +1,10 @@
 import * as React from 'react';
-import './modal-true-false-selection.scss';
+import './modal.scss';
 
 export interface IModalProps {
   handleClose(): void;
   show?: boolean;
-  text: string;
+  buttonText: string;
   title:string;
 }
 
@@ -19,7 +19,7 @@ export class Modal extends React.Component<IModalProps, any> {
           <div className="modal-title">{this.props.title}</div>
           <div className="modal-content">{this.props.children}</div>
           <div className="modal-buttons">
-            <button className="modal-buttons-accept" onClick={() => this.props.handleClose()}>{this.props.text}</button>
+            <button className="modal-buttons-accept" onClick={() => this.props.handleClose()}>{this.props.buttonText}</button>
           </div>
         </div>
       </div>;

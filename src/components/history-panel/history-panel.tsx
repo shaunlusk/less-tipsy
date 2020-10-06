@@ -4,6 +4,7 @@ import { NumberDisplay } from '../number-display/number-display';
 import { FileService } from '../../services/file-service';
 import './history-panel.scss';
 import { IHistorySessionDto } from '../../model/history-session-dto';
+import { Modal } from '../modal/modal';
 
 export interface IHistoryPanelSession {
   unitsConsumed: number;
@@ -19,13 +20,26 @@ export interface IHistoryPanelProps {
   sessions: IHistoryPanelSession[];
 }
 
-class HistoryPanel extends React.Component<IHistoryPanelProps, any> {
+interface IHistoryPanelState {
+  showImportFailedModal: boolean;
+}
+
+class HistoryPanel extends React.Component<IHistoryPanelProps, IHistoryPanelState> {
+  public constructor(props: IHistoryPanelProps) {
+    super(props);
+    this.state = {
+      showImportFailedModal: false
+    };
+  }
 
   private _importHistory(file: File) {
     FileService.importHistory(file).then(sessions => {
       if (!sessions) return;
       this.props.importHistory(sessions);
-    }).catch(err => console.log(err));
+    }).catch(err => {
+      console.error(err);
+      this._showImportFailedModal();
+    });
   }
 
   private _exportHistory() {
@@ -36,6 +50,14 @@ class HistoryPanel extends React.Component<IHistoryPanelProps, any> {
       rollingWeekly: session.rollingWeekly,
       unitsConsumed: session.unitsConsumed
     })));
+  }
+
+  private _showImportFailedModal() {
+    this.setState({showImportFailedModal: true});
+  }
+
+  private _hideImportFailedModal() {
+    this.setState({showImportFailedModal: false});
   }
 
   public render() {
@@ -65,7 +87,12 @@ class HistoryPanel extends React.Component<IHistoryPanelProps, any> {
           <label className="import-label" htmlFor="upload-file">Import History</label>
           <input type="file" name="file" id="upload-file" accept=".csv" onChange={(event) => this._importHistory(event.target.files![0])}/>
         </div>
-
+        <Modal
+          title="Import Error"
+          show={this.state.showImportFailedModal}
+          buttonText="Ok" 
+          handleClose={this._hideImportFailedModal.bind(this)}
+        >Import file format was not valid.</Modal>
       </div>
   }
 }
