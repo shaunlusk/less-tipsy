@@ -9,7 +9,7 @@ export class NoSessionPanel extends React.Component<INoSessionPanelProps, any> {
     return <div>
       <h3>No Active Sessions</h3>
       <div>
-        <button onClick={this.props.onBeginNewSession}>Begin New Session</button>
+        <button className="btn" onClick={this.props.onBeginNewSession}>Begin New Session</button>
       </div>
     </div>
   }

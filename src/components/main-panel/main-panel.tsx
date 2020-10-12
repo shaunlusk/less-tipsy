@@ -83,7 +83,7 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     this._history = this._loadHistory();
 
     this.state = {
-      activeTabLabel: 'History',
+      activeTabLabel: 'Session',
       sessionState: this._activeSession ? this._getUpdatedSessionState() : null,
       history: this._history,
       showCancelSessionWarning: false,
