@@ -21,6 +21,7 @@ export class TrueFalseSelectionModal extends React.Component<ITrueFalseSelection
           <div className="modal-content">{this.props.children}</div>
           <div className="modal-buttons">
             <button className="modal-buttons-reject" onClick={() => this.props.handleClose(false)}>{this.props.rejectText}</button>
+            <span className="modal-buttons-spacer"></span>
             <button className="modal-buttons-accept" onClick={() => this.props.handleClose(true)}>{this.props.acceptText}</button>
           </div>
         </div>

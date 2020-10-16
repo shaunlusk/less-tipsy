@@ -11,17 +11,14 @@ move save file to slcommon
 Nice to have
 ------------
 style modals better
-style buttons better
-style panels better
+
+Possible Future Dev
+-------------------
 time for next drink alert
-better ways of calculating next drink time
 auto convert volume on unit change
 validation class
 other ways of cleaning up main panel code
 check - calculate rolling hourly correctly?
-
-Maybe?
-------
 Warning on change settings?
 prevent creating session if settings not valid?
 input components with validation?

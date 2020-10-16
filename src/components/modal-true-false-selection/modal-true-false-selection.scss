@@ -26,4 +26,9 @@
 
 .modal-buttons {
   float: right;
+  display:flex;
+}
+
+.modal-buttons-spacer {
+  width: 3px;
 }
