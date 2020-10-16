@@ -25,7 +25,7 @@ class SettingsPanel extends React.Component<ISettingsPanelProps, any> {
     return <div className="settings-container">
       <h3>Settings</h3>
       <div className="settings-input max-per-session">
-        <div className="settings-label">Max Per Session</div>
+        <div className="settings-label">Max Alcohol Units Per Session</div>
         <input 
           type="number" 
           value={this.props.sessionMax} 
@@ -39,7 +39,7 @@ class SettingsPanel extends React.Component<ISettingsPanelProps, any> {
         ></input>
       </div>
       <div className="settings-input max-per-week">
-        <div className="settings-label">Max Per Week</div>
+        <div className="settings-label">Max Alcohol Units Per Week</div>
         <input 
           type="number" 
           value={this.props.weeklyMax} 
@@ -52,7 +52,7 @@ class SettingsPanel extends React.Component<ISettingsPanelProps, any> {
           onChange={e => this.props.onChangeWeeklyMax(e.target.value)}
         ></input>
       </div>
-      <h4>Session Rate</h4>
+      <strong>Consumption Rate</strong>
       <div className="settings-input session-rate-units">
         <div className="settings-label">Units...</div>
         <input 
@@ -81,7 +81,7 @@ class SettingsPanel extends React.Component<ISettingsPanelProps, any> {
           onChange={e => this.props.onChangeHours(e.target.value)}
         ></input>
       </div>
-      <h4>History</h4>
+      <strong>History</strong>
       <div className="settings-input keep-history-sessions">
         <div className="settings-label">History Sessions to Keep</div>
         <input 
@@ -97,9 +97,9 @@ class SettingsPanel extends React.Component<ISettingsPanelProps, any> {
         ></input>
       </div>
       <div className="settings-buttons">
-        <button onClick={this.props.onSaveSettings} disabled={!this.props.changesExist || !this.props.areInputsValid}>Save</button>
-        <button onClick={this.props.onCancelChanges} disabled={!this.props.changesExist}>Cancel Changes</button>
-        <button onClick={this.props.onRestoreDefaults}>Restore Defaults</button>
+        <button className="btn" onClick={this.props.onSaveSettings} disabled={!this.props.changesExist || !this.props.areInputsValid}>Save</button>
+        <button className="btn" onClick={this.props.onCancelChanges} disabled={!this.props.changesExist}>Cancel Changes</button>
+        <button className="btn btn-danger" onClick={this.props.onRestoreDefaults}>Restore Defaults</button>
       </div>
     </div>
   }

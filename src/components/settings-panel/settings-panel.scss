@@ -10,3 +10,12 @@
 .settings-label {
   padding-bottom: 2px;
 }
+
+.settings-buttons {
+  display: flex;
+
+  .btn {
+    margin-right: 5px;
+    white-space: nowrap;
+  }
+}
