@@ -97,6 +97,6 @@ export class ActiveSession {
     if (!this.lastDrink) {
       return null;
     }
-    return new Date(Date.now() + (this.lastDrink!.alcoholUnits / this._targetHourlyRate) * 60 * 60 * 1000);
+    return new Date(this.lastDrink.time.valueOf() + (this.lastDrink!.alcoholUnits / this._targetHourlyRate) * 60 * 60 * 1000);
   }
 }
