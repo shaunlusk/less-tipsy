@@ -78,18 +78,18 @@ class HistoryPanel extends React.Component<IHistoryPanelProps, IHistoryPanelStat
         {this.props.sessions.length === 0 
           ? <span>No Sessions</span>
           : <div className="history-panel-sessions">
-              <div>Date</div>
-              <div>Units</div>
-              <div>Session Max</div>
-              <div>Rolling Weekly</div>
-              <div>Weekly Max</div>
+              <div className="header col1">Date</div>
+              <div className="header col2">Units</div>
+              <div className="header col3">Session Max</div>
+              <div className="header col4">Rolling Weekly</div>
+              <div className="header col5">Weekly Max</div>
             {this.props.sessions.map(session => {
                   return <React.Fragment key={'session-' + (idx++)}>
-                    <div><DateDisplay datetime={session.date} format="YYYY-MM-DD"></DateDisplay></div> 
-                    <div><NumberDisplay number={session.unitsConsumed} decimalPlaces={1}></NumberDisplay></div>
-                    <div><NumberDisplay number={session.sessionMax} decimalPlaces={1}></NumberDisplay></div>
-                    <div><NumberDisplay number={session.rollingWeekly} decimalPlaces={1}></NumberDisplay></div>
-                    <div><NumberDisplay number={session.weeklyMax} decimalPlaces={1}></NumberDisplay></div>
+                    <div className="col1"><DateDisplay datetime={session.date} format="YYYY-MM-DD"></DateDisplay></div> 
+                    <div className="col2"><NumberDisplay number={session.unitsConsumed} decimalPlaces={1}></NumberDisplay></div>
+                    <div className="col3"><NumberDisplay number={session.sessionMax} decimalPlaces={1}></NumberDisplay></div>
+                    <div className="col4"><NumberDisplay number={session.rollingWeekly} decimalPlaces={1}></NumberDisplay></div>
+                    <div className="col5"><NumberDisplay number={session.weeklyMax} decimalPlaces={1}></NumberDisplay></div>
                   </React.Fragment>
                 })}
             </div>

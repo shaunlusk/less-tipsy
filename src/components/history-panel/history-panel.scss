@@ -1,6 +1,22 @@
+$border-color: grey;
+
 .history-panel-sessions {
   display: grid;
   grid-template-columns: 100px auto auto auto auto;
+  border: 1px solid $border-color;
+
+  .header {
+    border-bottom: 1px solid $border-color;
+  }
+  
+  .col1, .col2, .col3, .col4 {
+    border-right: 1px solid $border-color;
+  }
+
+  .col2, .col3, .col4, .col5 {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
 }
 
 .history-panel-buttons {
