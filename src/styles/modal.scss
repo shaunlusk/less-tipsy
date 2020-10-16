@@ -11,7 +11,7 @@
   top: 30%;
 }
 
-.modal-buttons-accept {
+.modal-buttons-reject {
   background-color: yellowgreen;
   color: white;
   border: 3px solid green;
@@ -20,8 +20,9 @@
   font-weight: 800;
 }
 
-.modal-buttons-reject {
+.modal-buttons-accept {
   margin-right: 8px;
+  margin-left: 5px;
   background-color: orangered;
   color: white;
   border: 3px solid darkred;
