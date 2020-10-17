@@ -1,5 +1,5 @@
 
-.modal-main {
+.modal-main, .modal-true-false-main {
   background-color: black;
   border: 1px solid white;
   border-radius: 5px;
@@ -11,7 +11,7 @@
   top: 30%;
 }
 
-.modal-buttons-reject {
+.modal-true-false-buttons-reject, .modal-button {
   background-color: yellowgreen;
   color: white;
   border: 3px solid green;
@@ -20,7 +20,7 @@
   font-weight: 800;
 }
 
-.modal-buttons-accept {
+.modal-true-false-buttons-accept {
   background-color: orangered;
   color: white;
   border: 3px solid darkred;
@@ -29,12 +29,12 @@
   font-weight: 800;
 }
 
-.modal-title {
+.modal-title, .modal-true-false-title {
   padding-bottom: 5px;
   border-bottom: 1px solid grey;
   font-weight: bolder;
 }
 
-.modal-content {
+.modal-content, .modal-true-false-content {
   padding-top: 8px;
 }

@@ -4,6 +4,8 @@ Required:
 about tab
 disclaimer
 convert to pwa
+fix modal css collisions
+fix modals on mobile
 
 move components to a react library
 move save file to slcommon

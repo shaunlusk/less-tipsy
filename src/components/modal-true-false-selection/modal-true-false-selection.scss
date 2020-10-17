@@ -1,4 +1,4 @@
-.modal {
+.modal-true-false {
   position: fixed;
   top: 0;
   left: 0;
@@ -7,7 +7,7 @@
   background: rgba(0, 0, 0, 0.9);
 }
 
-.modal-main {
+.modal-true-false-main {
   position:fixed;
   width: 80%;
   height: auto;
@@ -16,19 +16,19 @@
   transform: translate(-50%,-50%);
 }
 
-.display-block {
+.modal-true-false-display-block {
   display: block;
 }
 
-.display-none {
+.modal-true-false-display-none {
   display: none;
 }
 
-.modal-buttons {
+.modal-true-false-buttons {
   float: right;
   display:flex;
 }
 
-.modal-buttons-spacer {
+.modal-true-false-buttons-spacer {
   width: 3px;
 }
