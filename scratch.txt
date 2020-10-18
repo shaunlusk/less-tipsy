@@ -1,18 +1,13 @@
 
 Required:
 ---------
-about tab
+Track if about page has been viewed.
+Track if disclaimer has been agreed to.
 disclaimer
 convert to pwa
-fix modal css collisions
-fix modals on mobile
 
 move components to a react library
 move save file to slcommon
-
-Nice to have
-------------
-style modals better
 
 Possible Future Dev
 -------------------
@@ -25,6 +20,7 @@ Warning on change settings?
 prevent creating session if settings not valid?
 input components with validation?
 enable/disable tab?
+fix modals on mobile
 
 Notes:
 https://www.ftc.gov/tips-advice/business-center/guidance/mobile-health-apps-interactive-tool

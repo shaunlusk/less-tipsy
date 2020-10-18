@@ -16,6 +16,7 @@ import { HistoricalSession } from '../../model/historical-session';
 import { HistoryService } from '../../services/history-service';
 import { TrueFalseSelectionModal } from '../modal-true-false-selection/modal-true-false-selection';
 import { IHistorySessionDto } from '../../model/history-session-dto';
+import { AboutPanel } from '../about-panel/about-panel';
 
 interface ISettingsState {
   sessionMax: string;
@@ -83,7 +84,7 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     this._history = this._loadHistory();
 
     this.state = {
-      activeTabLabel: 'Settings',
+      activeTabLabel: 'About',
       sessionState: this._activeSession ? this._getUpdatedSessionState() : null,
       history: this._history,
       showCancelSessionWarning: false,
@@ -439,6 +440,9 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
           >
             Are you sure you want to delete the <b>entire</b> history?  This cannot be undone!
         </TrueFalseSelectionModal>
+      </Tab>
+      <Tab label="About">
+        <AboutPanel></AboutPanel>
       </Tab>
     </Tabs>
   }
