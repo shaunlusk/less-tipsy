@@ -17,6 +17,7 @@ import { HistoryService } from '../../services/history-service';
 import { TrueFalseSelectionModal } from '../modal-true-false-selection/modal-true-false-selection';
 import { IHistorySessionDto } from '../../model/history-session-dto';
 import { AboutPanel } from '../about-panel/about-panel';
+import { MainStateService } from '../../services/main-state-service';
 
 interface ISettingsState {
   sessionMax: string;
@@ -66,12 +67,14 @@ export interface IMainPanelProps {
   settingsService: SettingsService;
   sessionService: SessionService;
   historyService: HistoryService;
+  mainStateService: MainStateService;
 }
 
 class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
   private _settingsService: SettingsService;
   private _sessionService: SessionService;
   private _historyService: HistoryService;
+  private _mainStateService: MainStateService;
   private _activeSession: ActiveSession | null;
   private _history: History;
 
@@ -80,16 +83,18 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     this._settingsService = props.settingsService;
     this._sessionService = props.sessionService;
     this._historyService = props.historyService;
+    this._mainStateService = props.mainStateService;
     this._activeSession = this._loadSession();
     this._history = this._loadHistory();
 
+    const viewedAboutTab = this._mainStateService.viewedAboutTab;
     this.state = {
-      activeTabLabel: 'About',
+      activeTabLabel: viewedAboutTab ? 'Session' : 'About',
       sessionState: this._activeSession ? this._getUpdatedSessionState() : null,
       history: this._history,
       showCancelSessionWarning: false,
       showDeleteHistoryWarning: false,
-      settingsState: this._getSettingsStateFromService()
+      settingsState: this._getSettingsStateFromService(),
     };
   }
 
@@ -442,7 +447,7 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
         </TrueFalseSelectionModal>
       </Tab>
       <Tab label="About">
-        <AboutPanel></AboutPanel>
+        <AboutPanel viewedAboutPanel={() => this._mainStateService.viewedAboutTab = true}></AboutPanel>
       </Tab>
     </Tabs>
   }

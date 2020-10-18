@@ -1,7 +1,6 @@
 
 Required:
 ---------
-Track if about page has been viewed.
 Track if disclaimer has been agreed to.
 disclaimer
 convert to pwa
