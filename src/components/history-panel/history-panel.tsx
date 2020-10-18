@@ -96,9 +96,11 @@ class HistoryPanel extends React.Component<IHistoryPanelProps, IHistoryPanelStat
         }
         <div className="history-panel-buttons">
           <button className="btn btn-danger delete-history-button" disabled={this.props.sessions.length === 0} onClick={this.props.deleteHistory}>Delete History</button>
-          <button className="btn export-button" disabled={this.props.sessions.length === 0} onClick={this._exportHistory.bind(this)}>Export History</button>
-          <label className="btn import-label" htmlFor="upload-file">Import History</label>
-          <input type="file" name="file" id="upload-file" accept=".csv" onChange={(event) => this._importHistory(event.target.files![0])}/>
+          <div className="history-panel-buttons-import-export">
+            <button className="btn export-button" disabled={this.props.sessions.length === 0} onClick={this._exportHistory.bind(this)}>Export History</button>
+            <label className="btn import-label" htmlFor="upload-file">Import History</label>
+            <input type="file" name="file" id="upload-file" accept=".csv" onChange={(event) => this._importHistory(event.target.files![0])}/>
+          </div>
         </div>
         <Modal
           title="Import Error"
