@@ -18,6 +18,7 @@ import { TrueFalseSelectionModal } from '../modal-true-false-selection/modal-tru
 import { IHistorySessionDto } from '../../model/history-session-dto';
 import { AboutPanel } from '../about-panel/about-panel';
 import { MainStateService } from '../../services/main-state-service';
+import { Disclaimer } from '../disclaimer/disclaimer';
 
 interface ISettingsState {
   sessionMax: string;
@@ -61,6 +62,7 @@ interface IMainPanelState {
   history: IHistoryState;
   showCancelSessionWarning: boolean;
   showDeleteHistoryWarning: boolean;
+  showDisclaimer: boolean;
 }
 
 export interface IMainPanelProps {
@@ -95,7 +97,13 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
       showCancelSessionWarning: false,
       showDeleteHistoryWarning: false,
       settingsState: this._getSettingsStateFromService(),
+      showDisclaimer: !this._mainStateService.acceptedDisclaimer
     };
+  }
+
+  private _acceptDisclaimer(): void {
+    this._mainStateService.acceptedDisclaimer = true;
+    this.setState({showDisclaimer: false});
   }
 
   private _loadHistory(): History {
@@ -380,76 +388,78 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
   }
 
   public render() {
-    return <Tabs activeTabLabel={this.state.activeTabLabel} activeTabChanged={this._changeTab.bind(this)}>
-      {this.state.sessionState ? 
-        <Tab label="Session">
-          <ActiveSessionPanel 
-            addDrink={this._addDrink.bind(this)}
-            finishSession={this._finishSession.bind(this)}
-            cancelSession={this._warnCancelSession.bind(this)}
-            lastDrink={this.state.sessionState.lastDrink}
-            nextDrinkTime={this.state.sessionState.nextDrinkTime}
-            sessionTotal={this.state.sessionState.sessionTotal}
-            sessionRemaining={this.state.sessionState.sessionRemaining}
-            hourlyRate={this.state.sessionState.hourlyRate}
-            rollingWeeklyTotal={this.state.sessionState.rollingWeeklyTotal}
-            rollingWeeklyRemaining={this.state.sessionState.rollingWeeklyRemaining}
-            lastVolume={this.state.sessionState.lastVolume}
-            lastAbv={this.state.sessionState.lastAbv}
-            lastVolumeUnit={this.state.sessionState.lastVolumeUnit}
-            deleteLastDrink={this._handleDeleteLastDrink.bind(this)}
-          >
-          </ActiveSessionPanel>
+    return <React.Fragment>{this.state.showDisclaimer ? <Disclaimer accept={this._acceptDisclaimer.bind(this)}></Disclaimer>
+      : <Tabs activeTabLabel={this.state.activeTabLabel} activeTabChanged={this._changeTab.bind(this)}>
+        {this.state.sessionState ? 
+          <Tab label="Session">
+            <ActiveSessionPanel 
+              addDrink={this._addDrink.bind(this)}
+              finishSession={this._finishSession.bind(this)}
+              cancelSession={this._warnCancelSession.bind(this)}
+              lastDrink={this.state.sessionState.lastDrink}
+              nextDrinkTime={this.state.sessionState.nextDrinkTime}
+              sessionTotal={this.state.sessionState.sessionTotal}
+              sessionRemaining={this.state.sessionState.sessionRemaining}
+              hourlyRate={this.state.sessionState.hourlyRate}
+              rollingWeeklyTotal={this.state.sessionState.rollingWeeklyTotal}
+              rollingWeeklyRemaining={this.state.sessionState.rollingWeeklyRemaining}
+              lastVolume={this.state.sessionState.lastVolume}
+              lastAbv={this.state.sessionState.lastAbv}
+              lastVolumeUnit={this.state.sessionState.lastVolumeUnit}
+              deleteLastDrink={this._handleDeleteLastDrink.bind(this)}
+            >
+            </ActiveSessionPanel>
+            <TrueFalseSelectionModal 
+              title="Cancel Session?"
+              show={this.state.showCancelSessionWarning}
+              acceptText="Cancel Session" 
+              rejectText="Keep Current Session" 
+              handleClose={this._finishCancelSession.bind(this)}
+            >
+              Are you sure you want to cancel the current session?  This cannot be undone!
+            </TrueFalseSelectionModal>
+          </Tab>
+        : <Tab label="Session">
+            <NoSessionPanel onBeginNewSession={this._beginNewSession.bind(this)}></NoSessionPanel>
+          </Tab> }
+        <Tab label="Settings"><SettingsPanel 
+          sessionMax={this.state.settingsState.sessionMax}
+          weeklyMax={this.state.settingsState.weeklyMax} 
+          units={this.state.settingsState.units}
+          hours={this.state.settingsState.hours}
+          historySessionsToKeep={this.state.settingsState.historySessionsToKeep}
+          changesExist={this.state.settingsState.changesExist}
+          areInputsValid={this.state.settingsState.areInputsValid}
+          onChangeSessionMax={this._handleChangeSettingSessionMax.bind(this)}
+          onChangeWeeklyMax={this._handleChangeSettingWeeklyMax.bind(this)}
+          onChangeUnits={this._handleChangeSettingUnits.bind(this)}
+          onChangeHours={this._handleChangeSettingHours.bind(this)}
+          onChangeHistorySessions={this._handleChangeSettingHistorySessions.bind(this)}
+          onCancelChanges={this._handleCancelSettingsChanges.bind(this)}
+          onRestoreDefaults={this._handleRestoreDefaultSettings.bind(this)}
+          onSaveSettings={this._handleSaveSettings.bind(this)}
+        ></SettingsPanel></Tab>
+        <Tab label="History">
+          <HistoryPanel 
+            sessions={this.state.history.sessions} 
+            deleteHistory={this._warnDeleteHistory.bind(this)}
+            importHistory={this._importHistory.bind(this)}
+          ></HistoryPanel>
           <TrueFalseSelectionModal 
-            title="Cancel Session?"
-            show={this.state.showCancelSessionWarning}
-            acceptText="Cancel Session" 
-            rejectText="Keep Current Session" 
-            handleClose={this._finishCancelSession.bind(this)}
-          >
-            Are you sure you want to cancel the current session?  This cannot be undone!
+              title="Delete Session?"
+              show={this.state.showDeleteHistoryWarning}
+              acceptText="Delete History" 
+              rejectText="Keep History" 
+              handleClose={this._finishDeleteHistory.bind(this)}
+            >
+              Are you sure you want to delete the <b>entire</b> history?  This cannot be undone!
           </TrueFalseSelectionModal>
         </Tab>
-      : <Tab label="Session">
-          <NoSessionPanel onBeginNewSession={this._beginNewSession.bind(this)}></NoSessionPanel>
-        </Tab> }
-      <Tab label="Settings"><SettingsPanel 
-        sessionMax={this.state.settingsState.sessionMax}
-        weeklyMax={this.state.settingsState.weeklyMax} 
-        units={this.state.settingsState.units}
-        hours={this.state.settingsState.hours}
-        historySessionsToKeep={this.state.settingsState.historySessionsToKeep}
-        changesExist={this.state.settingsState.changesExist}
-        areInputsValid={this.state.settingsState.areInputsValid}
-        onChangeSessionMax={this._handleChangeSettingSessionMax.bind(this)}
-        onChangeWeeklyMax={this._handleChangeSettingWeeklyMax.bind(this)}
-        onChangeUnits={this._handleChangeSettingUnits.bind(this)}
-        onChangeHours={this._handleChangeSettingHours.bind(this)}
-        onChangeHistorySessions={this._handleChangeSettingHistorySessions.bind(this)}
-        onCancelChanges={this._handleCancelSettingsChanges.bind(this)}
-        onRestoreDefaults={this._handleRestoreDefaultSettings.bind(this)}
-        onSaveSettings={this._handleSaveSettings.bind(this)}
-      ></SettingsPanel></Tab>
-      <Tab label="History">
-        <HistoryPanel 
-          sessions={this.state.history.sessions} 
-          deleteHistory={this._warnDeleteHistory.bind(this)}
-          importHistory={this._importHistory.bind(this)}
-        ></HistoryPanel>
-        <TrueFalseSelectionModal 
-            title="Delete Session?"
-            show={this.state.showDeleteHistoryWarning}
-            acceptText="Delete History" 
-            rejectText="Keep History" 
-            handleClose={this._finishDeleteHistory.bind(this)}
-          >
-            Are you sure you want to delete the <b>entire</b> history?  This cannot be undone!
-        </TrueFalseSelectionModal>
-      </Tab>
-      <Tab label="About">
-        <AboutPanel viewedAboutPanel={() => this._mainStateService.viewedAboutTab = true}></AboutPanel>
-      </Tab>
-    </Tabs>
+        <Tab label="About">
+          <AboutPanel viewedAboutPanel={() => this._mainStateService.viewedAboutTab = true}></AboutPanel>
+        </Tab>
+      </Tabs>}
+    </React.Fragment>
   }
 }
 

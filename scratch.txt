@@ -1,8 +1,6 @@
 
 Required:
 ---------
-Track if disclaimer has been agreed to.
-disclaimer
 convert to pwa
 
 move components to a react library

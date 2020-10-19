@@ -10,7 +10,7 @@ export interface IModalProps {
 
 export class Modal extends React.Component<IModalProps, any> {
   private _showHideClassName(): string {
-    return this.props.show ? 'modal-display-block' : 'modal-display-none';
+    return this.props.show ? 'modal modal-display-block' : 'modal modal-display-none';
   }
 
   public render() {

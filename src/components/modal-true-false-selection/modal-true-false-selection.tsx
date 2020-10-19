@@ -11,7 +11,7 @@ export interface ITrueFalseSelectionModalProps {
 
 export class TrueFalseSelectionModal extends React.Component<ITrueFalseSelectionModalProps, any> {
   private _showHideClassName(): string {
-    return this.props.show ? 'modal-true-false-display-block' : 'modal-true-false-display-none';
+    return this.props.show ? 'modal-true-false modal-true-false-display-block' : 'modal-true-false modal-true-false-display-none';
   }
 
   public render() {
