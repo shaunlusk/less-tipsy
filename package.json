@@ -2,6 +2,7 @@
   "name": "less-tipsy",
   "version": "0.1.0",
   "private": true,
+  "homepage":"http://shaunlusk.github.io",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
