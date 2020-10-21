@@ -24,6 +24,11 @@ export class Disclaimer extends React.Component<IDisclaimerProps, IDisclaimerSta
 
     private _submit(): void {
         if (this.state.accepted) {
+            window.scroll({
+                top: 0, 
+                left: 0, 
+                behavior: 'smooth'
+            });
             this.props.accept();
         }
     }

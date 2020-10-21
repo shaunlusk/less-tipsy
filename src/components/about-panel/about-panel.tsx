@@ -5,11 +5,6 @@ export interface IAboutPanelProps {
 }
 
 export const AboutPanel: FunctionComponent<IAboutPanelProps> = ({viewedAboutPanel}) => {
-    window.scroll({
-        top: 0, 
-        left: 0, 
-        behavior: 'smooth'
-    });
     viewedAboutPanel();
     return <div>
         <h3>About</h3>
