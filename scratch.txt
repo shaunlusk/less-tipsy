@@ -1,6 +1,11 @@
 
 Required:
 ---------
+How to tab
+warning for over the limits: session max, weekly max, consumption rate
+    current session
+    history sessions
+prompt to finish session after 2 hours idle
 convert to pwa
 
 move components to a react library
@@ -24,3 +29,29 @@ https://www.ftc.gov/tips-advice/business-center/guidance/mobile-health-apps-inte
 https://www.termsfeed.com/blog/mobile-app-disclaimer/#:~:text=If%20you%20have%20any%20kind,you'll%20want%20to%20include.&text=If%20your%20medical%2Drelated%20content,be%20included%20in%20your%20disclaimer.
 https://www.disclaimergenerator.net/health-disclaimers/
 https://iproven.com/pages/app-medical-disclaimer
+
+Old:
+  // public get weeklyMax(): number {
+  //   return this._weeklyMax;
+  // }
+
+  // public get rollingWeeklyTotal(): number {
+  //   return this._rollingWeeklyTotal + this.unitsConsumed;
+  // }
+
+  // public get rollingWeeklyRemaining(): number {
+  //   const remaining = this._weeklyMax - this.rollingWeeklyTotal;
+  //   return remaining < 0 ? 0 : remaining; 
+  // }
+  
+  // public get isHourlyRateOk(): boolean {
+  //   return this.hourlyRate <= this._targetHourlyRate;
+  // }
+
+  // public get isSessionOk(): boolean {
+  //   return this.unitsConsumed <= this._sessionMax;
+  // }
+
+  // public get isWeeklyOk(): boolean {
+  //   return this.rollingWeeklyTotal <= this._weeklyMax;
+  // }

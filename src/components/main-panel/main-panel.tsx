@@ -143,6 +143,11 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     this.setState({activeTabLabel:label});
   }
 
+  private _getRollingWeeklyRemaining(): number {
+    const remaining = this._settingsService.weeklyMax - this._getRollingWeeklyTotal();
+    return remaining < 0 ? 0 : remaining;
+  }
+
   private _getUpdatedSessionState(): ISessionState {
     if (!this._activeSession) {
       throw new Error('No Active Session.');
@@ -153,8 +158,8 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
       sessionTotal: this._activeSession.unitsConsumed,
       sessionRemaining: this._activeSession.sessionRemaining,
       hourlyRate: this._activeSession.hourlyRate,
-      rollingWeeklyTotal: this._activeSession.rollingWeeklyTotal,
-      rollingWeeklyRemaining: this._activeSession.rollingWeeklyRemaining,
+      rollingWeeklyTotal: this._getRollingWeeklyTotal(),
+      rollingWeeklyRemaining: this._getRollingWeeklyRemaining(),
       lastVolume: this._activeSession.lastDrink ? this._activeSession.lastDrink.volume : 12,
       lastAbv: this._activeSession.lastDrink ? this._activeSession.lastDrink.abv : 5,
       lastVolumeUnit: this._activeSession.lastDrink ? this._activeSession.lastDrink.volumeUnit : VolumeUnit.Ounces  
@@ -176,9 +181,7 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
 
   private _beginNewSession(): void {
     this._activeSession = new ActiveSession(
-      this._settingsService.sessionMax, 
-      this._settingsService.weeklyMax, 
-      this._getRollingWeeklyTotal(),
+      this._settingsService.sessionMax,
       this._settingsService.consumptionRate);
     this._sessionService.saveSession(this._activeSession);
 
@@ -191,7 +194,7 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
   private _getRollingWeeklyTotal(): number {
     let rollingWeeklyTotal = 0;
     const week = 1000 * 60 * 60 * 24 * 7;
-    const pastWeek = new Date(Date.now() - week);
+    const pastWeek = new Date(this._activeSession!.date.getTime() - week);
     let idx = this._history.sessions.length - 1;
     while (idx >= 0) {
       const session = this._history.sessions[idx];
@@ -199,7 +202,7 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
       rollingWeeklyTotal += session.unitsConsumed;
       idx--;
     }
-    return rollingWeeklyTotal;
+    return rollingWeeklyTotal + this._activeSession!.unitsConsumed;
   }
 
   private _finishSession(): void {
@@ -210,8 +213,8 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
       this._activeSession.unitsConsumed,
       this._activeSession.date,
       this._activeSession.sessionMax,
-      this._activeSession.weeklyMax,
-      this._activeSession.rollingWeeklyTotal
+      this._settingsService.weeklyMax,
+      this._getRollingWeeklyTotal()
     );
     this._history.addSession(histSession);
     this._refreshHistory();
@@ -230,8 +233,6 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     if (result) {
       this._activeSession = new ActiveSession(
         this._settingsService.sessionMax, 
-        this._settingsService.weeklyMax, 
-        0,
         this._settingsService.consumptionRate);
       this._sessionService.deleteSession();
       this.setState({

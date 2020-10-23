@@ -13,8 +13,6 @@ interface IDrinkSaveModel {
 interface IActiveSessionSaveModel {
   drinks: IDrinkSaveModel[];
   sessionMax: number;
-  weeklyMax: number;
-  rollingWeeklyTotal: number;
   date: string;
   targetHourlyRate: number;
 }
@@ -40,8 +38,6 @@ export class SessionService {
     }
     const activeSession = new ActiveSession(
       savedModel.sessionMax,
-      savedModel.weeklyMax,
-      savedModel.rollingWeeklyTotal,
       savedModel.targetHourlyRate
     );
     activeSession.date = new Date(savedModel.date);
@@ -59,8 +55,6 @@ export class SessionService {
     const saveModel: IActiveSessionSaveModel = {
       drinks,
       sessionMax: session.sessionMax,
-      weeklyMax: session.weeklyMax,
-      rollingWeeklyTotal: session.rollingWeeklyTotal,
       date: session.date.toString(),
       targetHourlyRate: session.targetHourlyRate
     };

@@ -3,15 +3,11 @@ import { Drink } from "./drink";
 export class ActiveSession {
   private _drinks: Drink[] = [];
   private _sessionMax: number;
-  private _weeklyMax: number;
-  private _rollingWeeklyTotal: number;
   private _date: Date = new Date();
   private _targetHourlyRate: number;
 
-  public constructor(sessionMax: number, weeklyMax: number, rollingWeeklyTotal: number, targetHourlyRate: number) {
+  public constructor(sessionMax: number, targetHourlyRate: number) {
     this._sessionMax = sessionMax;
-    this._weeklyMax = weeklyMax;
-    this._rollingWeeklyTotal = rollingWeeklyTotal;
     this._targetHourlyRate = targetHourlyRate;
   }
 
@@ -66,31 +62,6 @@ export class ActiveSession {
 
   public get targetHourlyRate(): number {
     return this._targetHourlyRate;
-  }
-
-  public get weeklyMax(): number {
-    return this._weeklyMax;
-  }
-
-  public get rollingWeeklyTotal(): number {
-    return this._rollingWeeklyTotal + this.unitsConsumed;
-  }
-
-  public get rollingWeeklyRemaining(): number {
-    const remaining = this._weeklyMax - this.rollingWeeklyTotal;
-    return remaining < 0 ? 0 : remaining; 
-  }
-  
-  public get isHourlyRateOk(): boolean {
-    return this.hourlyRate <= this._targetHourlyRate;
-  }
-
-  public get isSessionOk(): boolean {
-    return this.unitsConsumed <= this._sessionMax;
-  }
-
-  public get isWeeklyOk(): boolean {
-    return this.rollingWeeklyTotal <= this._weeklyMax;
   }
 
   public get nextDrinkTime(): Date | null {

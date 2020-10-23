@@ -14,4 +14,5 @@ export class History {
   public get sessions(): HistoricalSession[] {
     return this._sessions;
   }
+
 }
