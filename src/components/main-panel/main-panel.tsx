@@ -35,9 +35,12 @@ interface ISessionState {
   nextDrinkTime: Date | null;
   sessionTotal: number;
   sessionRemaining: number;
+  sessionMax: number;
   hourlyRate: number;
+  hourlyRateMax: number;
   rollingWeeklyTotal: number;
   rollingWeeklyRemaining: number;
+  rollingWeeklyMax: number;
   lastVolume: number;
   lastAbv: number;
   lastVolumeUnit: VolumeUnit;
@@ -157,9 +160,12 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
       nextDrinkTime: this._activeSession.nextDrinkTime,
       sessionTotal: this._activeSession.unitsConsumed,
       sessionRemaining: this._activeSession.sessionRemaining,
+      sessionMax: this._settingsService.sessionMax,
       hourlyRate: this._activeSession.hourlyRate,
+      hourlyRateMax: this._settingsService.consumptionRate,
       rollingWeeklyTotal: this._getRollingWeeklyTotal(),
       rollingWeeklyRemaining: this._getRollingWeeklyRemaining(),
+      rollingWeeklyMax: this._settingsService.weeklyMax,
       lastVolume: this._activeSession.lastDrink ? this._activeSession.lastDrink.volume : 12,
       lastAbv: this._activeSession.lastDrink ? this._activeSession.lastDrink.abv : 5,
       lastVolumeUnit: this._activeSession.lastDrink ? this._activeSession.lastDrink.volumeUnit : VolumeUnit.Ounces  
@@ -383,7 +389,8 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
   }
 
   private _handleDeleteLastDrink(): void {
-    this._activeSession?.deleteLast();
+    this._activeSession!.deleteLast();
+    this._sessionService.saveSession(this._activeSession!);
     const newSessionState = this._getUpdatedSessionState();
     this.setState({sessionState: newSessionState});
   }
@@ -401,9 +408,12 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
               nextDrinkTime={this.state.sessionState.nextDrinkTime}
               sessionTotal={this.state.sessionState.sessionTotal}
               sessionRemaining={this.state.sessionState.sessionRemaining}
+              sessionMax={this.state.sessionState.sessionMax}
               hourlyRate={this.state.sessionState.hourlyRate}
+              hourlyRateMax={this.state.sessionState.hourlyRateMax}
               rollingWeeklyTotal={this.state.sessionState.rollingWeeklyTotal}
               rollingWeeklyRemaining={this.state.sessionState.rollingWeeklyRemaining}
+              rollingWeeklyMax={this.state.sessionState.rollingWeeklyMax}
               lastVolume={this.state.sessionState.lastVolume}
               lastAbv={this.state.sessionState.lastAbv}
               lastVolumeUnit={this.state.sessionState.lastVolumeUnit}

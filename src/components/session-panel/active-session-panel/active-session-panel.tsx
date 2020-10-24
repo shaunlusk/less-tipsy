@@ -15,9 +15,12 @@ export interface IActiveSessionPanelProps {
   nextDrinkTime: Date | null;
   sessionTotal: number;
   sessionRemaining: number;
+  sessionMax: number;
   hourlyRate: number;
+  hourlyRateMax: number;
   rollingWeeklyTotal: number;
   rollingWeeklyRemaining: number;
+  rollingWeeklyMax: number;
   lastVolume: number;
   lastAbv: number;
   lastVolumeUnit: VolumeUnit;
@@ -77,6 +80,19 @@ export class ActiveSessionPanel extends React.Component<IActiveSessionPanelProps
     this.props.cancelSession();
   }
 
+  private _isOverSessionMax(): boolean {
+    return this.props.sessionTotal > this.props.sessionMax;
+  }
+
+  private _isOverWeeklyMax(): boolean {
+    return this.props.rollingWeeklyTotal > this.props.rollingWeeklyMax;
+  }
+
+  private _isOverRate(): boolean {
+    return this.props.hourlyRate > this.props.hourlyRateMax;
+  }
+
+
   public render() {
     return <div>
       <div><strong>Add Drink</strong></div>
@@ -109,32 +125,37 @@ export class ActiveSessionPanel extends React.Component<IActiveSessionPanelProps
             onChange={e => this._handleChangeAbv(e.target.value)}
           ></input>
         <div className="add-drink-button">
-          <button className="btn" onClick={this._addDrink.bind(this)}>Add</button>
+          <button className={this._isOverSessionMax() ? "btn btn-danger" : "btn"} onClick={this._addDrink.bind(this)}>Add</button>
         </div>
       </div>
       <div className="drinks">
         <div><strong>Last Drink</strong></div>
-        <div>{this.props.lastDrink 
+        <div className="active-session-field-value">{this.props.lastDrink 
           ? <LastDrinkDisplay deleteDrink={this.props.deleteLastDrink} drink={this.props.lastDrink}></LastDrinkDisplay>
           : <span>--</span>}
         </div>
         <div><strong>Next Drink</strong></div>
-        <div>{this.props.nextDrinkTime 
+        <div className="active-session-field-value">{this.props.nextDrinkTime 
           ? <TimeDisplay datetime={this.props.nextDrinkTime}></TimeDisplay>
           : <span>--</span>}
         </div>
       </div>
       <div className="stats">
         <div><strong>Session Total</strong></div>
-        <div><NumberDisplay number={this.props.sessionTotal} decimalPlaces={1}></NumberDisplay></div>
+        <div className={this._isOverSessionMax() ? "active-session-field-value active-session-warning" : "active-session-field-value"} title={this._isOverSessionMax() ? "Warning: Over maximum drinks per session.": ""}>
+          <NumberDisplay number={this.props.sessionTotal} decimalPlaces={1}></NumberDisplay>
+          {this._isOverSessionMax()
+          ? <span className="active-session-warning-icon"><strong>!</strong></span> 
+          : null}
+        </div>
         <div><strong>Session Remaining</strong></div>
-        <div><NumberDisplay number={this.props.sessionRemaining} decimalPlaces={1}></NumberDisplay></div>
+        <div className={this._isOverSessionMax() ? "active-session-field-value active-session-warning" : "active-session-field-value"}><NumberDisplay number={this.props.sessionRemaining} decimalPlaces={1}></NumberDisplay></div>
         <div><strong>Rolling Hourly Rate</strong></div>
-        <div><NumberDisplay number={this.props.hourlyRate} decimalPlaces={1}></NumberDisplay></div>
+        <div className={this._isOverRate() ? "active-session-field-value active-session-warning" : "active-session-field-value"}><NumberDisplay number={this.props.hourlyRate} decimalPlaces={1}></NumberDisplay></div>
         <div><strong>Rolling Weekly Total</strong></div>
-        <div><NumberDisplay number={this.props.rollingWeeklyTotal} decimalPlaces={1}></NumberDisplay></div>
+        <div className={this._isOverWeeklyMax() ? "active-session-field-value active-session-warning" : "active-session-field-value"}><NumberDisplay number={this.props.rollingWeeklyTotal} decimalPlaces={1}></NumberDisplay></div>
         <div><strong>Rolling Weekly Remaining</strong></div>
-        <div><NumberDisplay number={this.props.rollingWeeklyRemaining} decimalPlaces={1}></NumberDisplay></div>
+        <div className={this._isOverWeeklyMax() ? "active-session-field-value active-session-warning" : "active-session-field-value"}><NumberDisplay number={this.props.rollingWeeklyRemaining} decimalPlaces={1}></NumberDisplay></div>
         <div className="active-session-buttons">
           <button className="btn" onClick={this.props.finishSession}>Finish Session</button>
           <button className="btn btn-danger" onClick={this._cancelSession.bind(this)}>Cancel Session</button>
