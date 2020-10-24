@@ -125,7 +125,8 @@ export class ActiveSessionPanel extends React.Component<IActiveSessionPanelProps
             onChange={e => this._handleChangeAbv(e.target.value)}
           ></input>
         <div className="add-drink-button">
-          <button className={this._isOverSessionMax() ? "btn btn-danger" : "btn"} onClick={this._addDrink.bind(this)}>Add</button>
+          <button className={
+            this._isOverSessionMax() || this._isOverRate() || this._isOverWeeklyMax() ? "btn btn-danger" : "btn"} onClick={this._addDrink.bind(this)}>Add</button>
         </div>
       </div>
       <div className="drinks">
