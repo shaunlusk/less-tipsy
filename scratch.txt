@@ -2,9 +2,6 @@
 Required:
 ---------
 How to tab
-warning for over the limits: session max, weekly max, consumption rate
-    current session
-    history sessions
 prompt to finish session after 2 hours idle
 convert to pwa
 

@@ -54,9 +54,8 @@ export class ActiveSession {
     }
     const startTime = this._drinks[0].time;
     const currentTime = new Date();
-    // Add target hourly rate to prevent huge hourly rates and division by zero.
-    const lastUnitAllowance = this.lastDrink!.alcoholUnits / this._targetHourlyRate;
-    const timeDiff = (currentTime.valueOf() - startTime.valueOf()) / 1000 / 60 / 60 + lastUnitAllowance;
+
+    const timeDiff = (currentTime.valueOf() - startTime.valueOf()) / 1000 / 60 / 60 + 1;
     return this.unitsConsumed / timeDiff;
   }
 

@@ -102,6 +102,8 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
       settingsState: this._getSettingsStateFromService(),
       showDisclaimer: !this._mainStateService.acceptedDisclaimer
     };
+
+    eval('window["main"] = this;');
   }
 
   private _acceptDisclaimer(): void {
