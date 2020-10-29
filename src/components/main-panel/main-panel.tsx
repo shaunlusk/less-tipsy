@@ -20,6 +20,10 @@ import { AboutPanel } from '../about-panel/about-panel';
 import { MainStateService } from '../../services/main-state-service';
 import { Disclaimer } from '../disclaimer/disclaimer';
 
+const MINUTE = 1000 * 60;
+const TIMEOUT_CHECK_INTERVAL = MINUTE * 2;
+const TIMEOUT_AFTER =  MINUTE * 120;
+
 interface ISettingsState {
   sessionMax: string;
   weeklyMax: string;
@@ -66,6 +70,7 @@ interface IMainPanelState {
   showCancelSessionWarning: boolean;
   showDeleteHistoryWarning: boolean;
   showDisclaimer: boolean;
+  showTimeoutPrompt: boolean;
 }
 
 export interface IMainPanelProps {
@@ -82,6 +87,7 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
   private _mainStateService: MainStateService;
   private _activeSession: ActiveSession | null;
   private _history: History;
+  private _lastTimeoutCheckTime: Date;
 
   constructor(props: IMainPanelProps) {
     super(props);
@@ -92,6 +98,9 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     this._activeSession = this._loadSession();
     this._history = this._loadHistory();
 
+    this._lastTimeoutCheckTime = this._activeSession?.lastDrink?.time || new Date();
+    this._setCheckForTimeout();
+
     const viewedAboutTab = this._mainStateService.viewedAboutTab;
     this.state = {
       activeTabLabel: viewedAboutTab ? 'Session' : 'About',
@@ -100,10 +109,35 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
       showCancelSessionWarning: false,
       showDeleteHistoryWarning: false,
       settingsState: this._getSettingsStateFromService(),
-      showDisclaimer: !this._mainStateService.acceptedDisclaimer
+      showDisclaimer: !this._mainStateService.acceptedDisclaimer,
+      showTimeoutPrompt: this._passedTimeout()
     };
+  }
 
-    eval('window["main"] = this;');
+  private _checkTimeForTimeout(): void {
+    if (this._passedTimeout()) {
+      this.setState({
+        showTimeoutPrompt: true,
+        activeTabLabel: 'Session'
+      });
+    }
+  }
+
+  private _setCheckForTimeout(): void {
+    setInterval(this._checkTimeForTimeout.bind(this), TIMEOUT_CHECK_INTERVAL);
+  }
+
+  private _passedTimeout(): boolean {
+    if (!this._activeSession) {
+      return false;
+    }
+    const currentTime = new Date();
+
+    const diff = currentTime.valueOf() - this._lastTimeoutCheckTime.valueOf();
+    if (diff >= TIMEOUT_AFTER) {
+      return true;
+    }
+    return false;
   }
 
   private _acceptDisclaimer(): void {
@@ -192,6 +226,7 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
       this._settingsService.sessionMax,
       this._settingsService.consumptionRate);
     this._sessionService.saveSession(this._activeSession);
+    this._lastTimeoutCheckTime = new Date();
 
     this.setState({
       activeTabLabel:'Session',
@@ -227,9 +262,13 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     this._history.addSession(histSession);
     this._refreshHistory();
 
+    this._activeSession = null;
+    this._sessionService.deleteSession();
+
     this.setState({
       activeTabLabel:'Session',
-      sessionState: null
+      sessionState: null,
+      showTimeoutPrompt: false
     });
   }
 
@@ -397,6 +436,17 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     this.setState({sessionState: newSessionState});
   }
 
+  private _handleSessionTimeout(result: boolean) {
+    if (result) {
+      this._finishSession();
+    } else {
+      this._lastTimeoutCheckTime = new Date();
+      this.setState({
+        showTimeoutPrompt: false
+      });
+    }
+  }
+
   public render() {
     return <React.Fragment>{this.state.showDisclaimer ? <Disclaimer accept={this._acceptDisclaimer.bind(this)}></Disclaimer>
       : <Tabs activeTabLabel={this.state.activeTabLabel} activeTabChanged={this._changeTab.bind(this)}>
@@ -430,6 +480,15 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
               handleClose={this._finishCancelSession.bind(this)}
             >
               Are you sure you want to cancel the current session?  This cannot be undone!
+            </TrueFalseSelectionModal>
+            <TrueFalseSelectionModal 
+              title="Finish Session?"
+              show={this.state.showTimeoutPrompt}
+              acceptText="Finish Session" 
+              rejectText="Keep Current Session" 
+              handleClose={this._handleSessionTimeout.bind(this)}
+            >
+              It has been more than 2 hours since your last drink.  Would you like to finish the current session?
             </TrueFalseSelectionModal>
           </Tab>
         : <Tab label="Session">

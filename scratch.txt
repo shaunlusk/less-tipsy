@@ -2,7 +2,6 @@
 Required:
 ---------
 How to tab
-prompt to finish session after 2 hours idle
 convert to pwa
 
 move components to a react library
