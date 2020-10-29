@@ -1,11 +1,11 @@
 import { LocalStorageService } from "./local-storage-service";
 
 export interface IMainStateService {
-    viewedAboutTab: boolean;
+    viewedHowToTab: boolean;
     acceptedDisclaimer: boolean;
 }
 
-const ViewedAboutTabStorageKey = 'ViewedAboutTab';
+const ViewedHowToTabStorageKey = 'ViewedHowToTab';
 const AcceptedDisclaimerStorageKey = 'AcceptedDisclaimer';
 
 export class MainStateService implements IMainStateService {
@@ -15,13 +15,13 @@ export class MainStateService implements IMainStateService {
     this._localStorageService = localStorageService;
   }
 
-  public get viewedAboutTab(): boolean {
-    var result = this._localStorageService.getBoolean(ViewedAboutTabStorageKey);
+  public get viewedHowToTab(): boolean {
+    var result = this._localStorageService.getBoolean(ViewedHowToTabStorageKey);
     return result || false;
   }
 
-  public set viewedAboutTab(value: boolean) {
-    this._localStorageService.put(ViewedAboutTabStorageKey, value);
+  public set viewedHowToTab(value: boolean) {
+    this._localStorageService.put(ViewedHowToTabStorageKey, value);
   }
 
   public get acceptedDisclaimer(): boolean {

@@ -19,6 +19,7 @@ import { IHistorySessionDto } from '../../model/history-session-dto';
 import { AboutPanel } from '../about-panel/about-panel';
 import { MainStateService } from '../../services/main-state-service';
 import { Disclaimer } from '../disclaimer/disclaimer';
+import { HowToPanel } from '../how-to-panel/how-to-panel';
 
 const MINUTE = 1000 * 60;
 const TIMEOUT_CHECK_INTERVAL = MINUTE * 2;
@@ -101,9 +102,9 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     this._lastTimeoutCheckTime = this._activeSession?.lastDrink?.time || new Date();
     this._setCheckForTimeout();
 
-    const viewedAboutTab = this._mainStateService.viewedAboutTab;
+    const viewedHowToTab = this._mainStateService.viewedHowToTab;
     this.state = {
-      activeTabLabel: viewedAboutTab ? 'Session' : 'About',
+      activeTabLabel: viewedHowToTab ? 'Session' : 'How-To',
       sessionState: this._activeSession ? this._getUpdatedSessionState() : null,
       history: this._history,
       showCancelSessionWarning: false,
@@ -527,8 +528,11 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
               Are you sure you want to delete the <b>entire</b> history?  This cannot be undone!
           </TrueFalseSelectionModal>
         </Tab>
+        <Tab label="How-To">
+          <HowToPanel viewedHowToPanel={() => this._mainStateService.viewedHowToTab = true}></HowToPanel>
+        </Tab>
         <Tab label="About">
-          <AboutPanel viewedAboutPanel={() => this._mainStateService.viewedAboutTab = true}></AboutPanel>
+          <AboutPanel></AboutPanel>
         </Tab>
       </Tabs>}
     </React.Fragment>

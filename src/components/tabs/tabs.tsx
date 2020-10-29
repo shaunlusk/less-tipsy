@@ -22,11 +22,11 @@ class Tabs extends React.Component<ITabsProps, any> {
     return <div className="tab-container">
       <div className="tab-headers">
         {this.props.children.map(tab => 
-          <span key={"tab-header-" + tab.props.label} className={"tab-header " + (tab === activeTab ? "active-tab-header" : "")}
+          <div key={"tab-header-" + tab.props.label} className={"tab-header " + (tab === activeTab ? "active-tab-header" : "")}
             onClick={() => this._setActiveTab(tab)}
           >
             {tab.props.label}
-          </span>
+          </div>
         )}
       </div>
       {activeTab}

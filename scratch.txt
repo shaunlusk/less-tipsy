@@ -1,7 +1,6 @@
 
 Required:
 ---------
-How to tab
 convert to pwa
 
 move components to a react library

@@ -1,11 +1,6 @@
 import React, { FunctionComponent } from 'react';
 
-export interface IAboutPanelProps {
-    viewedAboutPanel(): void;
-}
-
-export const AboutPanel: FunctionComponent<IAboutPanelProps> = ({viewedAboutPanel}) => {
-    viewedAboutPanel();
+export const AboutPanel: FunctionComponent = () => {
     return <div>
         <h3>About</h3>
         <div>
