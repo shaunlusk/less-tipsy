@@ -1,3 +1,5 @@
+@import './styles/colors.scss';
+
 .tab-container {
   width: 50%;
   min-width: 350px;
@@ -20,10 +22,13 @@
   color:grey;
   white-space: nowrap;
   font-size: smaller;
+  background-color: black;
 }
 
 .active-tab-header {
   color:white;
+  background-color: $background-color;
+  font-weight: 700;
 }
 
 .tab-content {
