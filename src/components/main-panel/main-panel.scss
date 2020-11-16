@@ -2,3 +2,20 @@
   margin: auto;
   min-width: 200px;
 }
+
+.add-button {
+  position: absolute;
+  top: 0px;
+  right: 10px;
+  text-align: center;
+  width: 32px;
+  font-size: xx-small;
+}
+
+#add-icon {
+  width: 32px;
+  height: 32px;
+  border: 1px solid yellowgreen;
+  background-color: white;
+  border-radius: 8px;
+}

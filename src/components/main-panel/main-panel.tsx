@@ -20,6 +20,7 @@ import { AboutPanel } from '../about-panel/about-panel';
 import { MainStateService } from '../../services/main-state-service';
 import { Disclaimer } from '../disclaimer/disclaimer';
 import { HowToPanel } from '../how-to-panel/how-to-panel';
+import { DisplayMode, InstallService } from '../../services/install-service';
 
 const MINUTE = 1000 * 60;
 const TIMEOUT_CHECK_INTERVAL = MINUTE * 2;
@@ -72,6 +73,7 @@ interface IMainPanelState {
   showDeleteHistoryWarning: boolean;
   showDisclaimer: boolean;
   showTimeoutPrompt: boolean;
+  showInstallButton: boolean;
 }
 
 export interface IMainPanelProps {
@@ -79,6 +81,7 @@ export interface IMainPanelProps {
   sessionService: SessionService;
   historyService: HistoryService;
   mainStateService: MainStateService;
+  installService: InstallService;
 }
 
 class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
@@ -86,6 +89,7 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
   private _sessionService: SessionService;
   private _historyService: HistoryService;
   private _mainStateService: MainStateService;
+  private _installService: InstallService;
   private _activeSession: ActiveSession | null;
   private _history: History;
   private _lastTimeoutCheckTime: Date;
@@ -96,6 +100,7 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     this._sessionService = props.sessionService;
     this._historyService = props.historyService;
     this._mainStateService = props.mainStateService;
+    this._installService = props.installService;
     this._activeSession = this._loadSession();
     this._history = this._loadHistory();
 
@@ -111,8 +116,20 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
       showDeleteHistoryWarning: false,
       settingsState: this._getSettingsStateFromService(),
       showDisclaimer: !this._mainStateService.acceptedDisclaimer,
-      showTimeoutPrompt: this._passedTimeout()
+      showTimeoutPrompt: this._passedTimeout(),
+      showInstallButton: false
     };
+
+    this._installService.addDisplayModeSetListener((result) => {
+      this.setState({showInstallButton : result === DisplayMode.BROWSERTAB});
+    });
+    eval('window.mainPanel = this');
+  }
+
+  private _promptForInstall(): void {
+    this._installService.promptToInstall(() => {
+      this.setState({showInstallButton: false});
+    });
   }
 
   private _checkTimeForTimeout(): void {
@@ -450,7 +467,14 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
 
   public render() {
     return <React.Fragment>{this.state.showDisclaimer ? <Disclaimer accept={this._acceptDisclaimer.bind(this)}></Disclaimer>
-      : <Tabs activeTabLabel={this.state.activeTabLabel} activeTabChanged={this._changeTab.bind(this)}>
+      : <div>
+        {this.state.showInstallButton 
+          ? <div className="add-button" onClick={this._promptForInstall.bind(this)}>
+            <img id="add-icon" alt="Add to Home Screen" src="./beer192.png"></img>
+            <label htmlFor="add-icon">Add to Home Screen</label>
+          </div>
+          : null}
+        <Tabs activeTabLabel={this.state.activeTabLabel} activeTabChanged={this._changeTab.bind(this)}>
         {this.state.sessionState ? 
           <Tab label="Session">
             <ActiveSessionPanel 
@@ -534,7 +558,8 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
         <Tab label="About">
           <AboutPanel></AboutPanel>
         </Tab>
-      </Tabs>}
+      </Tabs>
+      </div>}
     </React.Fragment>
   }
 }
