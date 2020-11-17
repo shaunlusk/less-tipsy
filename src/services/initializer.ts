@@ -13,7 +13,7 @@ export class Initializer {
   private _installService: InstallService;
 
   public constructor() {
-    const localStorageService = new LocalStorageService();
+    const localStorageService = new LocalStorageService('SL.Less-Tipsy');
     this._sessionService = new SessionService(localStorageService);
     this._settingsService = new SettingsService(localStorageService);
     this._historyService = new HistoryService(localStorageService, this._settingsService.historySessionsToKeep);

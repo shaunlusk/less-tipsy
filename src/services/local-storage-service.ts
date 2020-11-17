@@ -1,3 +1,5 @@
+import LZString from 'lz-string';
+
 export interface ILocalStorageService {
   put(key: string, value: number | string | boolean): void;
   getString(key: string): string | null;
@@ -9,27 +11,45 @@ export interface ILocalStorageService {
 }
 
 export class LocalStorageService implements ILocalStorageService {
+  private _namespace: string;
+
+  public constructor(namespace: string) {
+    this._namespace = namespace;
+  }
+
+  private _key(key: string): string {
+    return `${this._namespace}.${key}`;
+  }
+
+  private _zip(val: string): string {
+    return LZString.compressToUTF16(val);
+  }
+
+  private _unzip(val: string | null): string | null {
+    return val !== null ? LZString.decompressFromUTF16(val) : null;
+  }
+
   public getString(key: string): string | null {
-    return localStorage.getItem(key);
+    return this._unzip( localStorage.getItem(this._key(key)) );
   }
 
   public getNumber(key: string): number | null {
-    const value = localStorage.getItem(key);
+    const value = this._unzip( localStorage.getItem(this._key(key)) );
     return value ? parseFloat(value) : null;
   }
 
   public getBoolean(key: string): boolean | null {
-    const value = localStorage.getItem(key);
+    const value = this._unzip( localStorage.getItem(this._key(key)) );
     if (!value) return null;
     return value.toLocaleLowerCase() === "true" ? true : false;
   }
 
   public put(key: string, value: string | number | boolean): void {
-    localStorage.setItem(key, value.toString());
+    localStorage.setItem(this._key(key), this._zip( value.toString() ));
   }
 
   public getObject<T>(key: string): T | null {
-    const valueString = localStorage.getItem(key);
+    const valueString = this._unzip( localStorage.getItem(this._key(key)) );
     let value: T | null = null;
     if (valueString) {
       value = JSON.parse(valueString);
@@ -38,10 +58,10 @@ export class LocalStorageService implements ILocalStorageService {
   }
 
   public putObject<T>(key: string, value: T): void {
-    localStorage.setItem(key, JSON.stringify(value));
+    localStorage.setItem(this._key(key), this._zip( JSON.stringify(value) ));
   }
 
   public remove(key: string): void {
-    localStorage.removeItem(key);
+    localStorage.removeItem(this._key(key));
   }
 }
