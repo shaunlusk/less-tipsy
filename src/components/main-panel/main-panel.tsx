@@ -74,6 +74,8 @@ interface IMainPanelState {
   showDisclaimer: boolean;
   showTimeoutPrompt: boolean;
   showInstallButton: boolean;
+  displayMode: DisplayMode,
+  installable: boolean;
 }
 
 export interface IMainPanelProps {
@@ -117,11 +119,31 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
       settingsState: this._getSettingsStateFromService(),
       showDisclaimer: !this._mainStateService.acceptedDisclaimer,
       showTimeoutPrompt: this._passedTimeout(),
-      showInstallButton: false
+      showInstallButton: false,
+      displayMode: DisplayMode.BROWSERTAB,
+      installable: false
     };
+  }
 
-    this._installService.addDisplayModeSetListener((result) => {
-      this.setState({showInstallButton : result === DisplayMode.BROWSERTAB});
+  public componentDidMount():void {
+    console.log('Component Did Mount.');
+    this._installService.addDisplayModeSetListener(result => {
+      console.log('Display Mode set:', result);
+      this.setState(prevState => {
+        return {
+          showInstallButton: result === DisplayMode.BROWSERTAB && prevState.installable,
+          displayMode: result
+        };
+      });
+    });
+    this._installService.addInstallAvailableListener(() => {
+      console.log('Install Available');
+      this.setState(prevState => {
+        return {
+          showInstallButton: prevState.displayMode === DisplayMode.BROWSERTAB,
+          installable: true
+        };
+      });
     });
     eval('window.mainPanel = this');
   }
@@ -473,7 +495,7 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
             <img id="add-icon" alt="Add to Home Screen" src="./beer192.png"></img>
             <label htmlFor="add-icon">Add to Home Screen</label>
           </div>
-          : null}
+          :             <div>DEBUG: Installable? {this.state.installable?'isntallable':'not installable'}; DisplayMode: {this.state.displayMode}</div>}
         <Tabs activeTabLabel={this.state.activeTabLabel} activeTabChanged={this._changeTab.bind(this)}>
         {this.state.sessionState ? 
           <Tab label="Session">

@@ -2,6 +2,9 @@
 Required:
 ---------
 convert to pwa
+namespace storage
+  compress storage?
+  https://medium.com/@emadalam/namespace-localstorage-e2d1d2e68b20
 
 move components to a react library
 move save file to slcommon
