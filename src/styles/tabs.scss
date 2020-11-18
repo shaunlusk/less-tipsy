@@ -1,8 +1,9 @@
+@import './styles/common.scss';
 @import './styles/colors.scss';
 
 .tab-container {
   width: 50%;
-  min-width: 350px;
+  min-width: $application-min-width;
   margin: auto;
 }
 
