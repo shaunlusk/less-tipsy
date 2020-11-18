@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/less-tipsy/static/css/main.34c615ae.chunk.css",
-    "main.js": "/less-tipsy/static/js/main.e4864171.chunk.js",
-    "main.js.map": "/less-tipsy/static/js/main.e4864171.chunk.js.map",
+    "main.js": "/less-tipsy/static/js/main.535ad2dc.chunk.js",
+    "main.js.map": "/less-tipsy/static/js/main.535ad2dc.chunk.js.map",
     "runtime-main.js": "/less-tipsy/static/js/runtime-main.cd25d2e4.js",
     "runtime-main.js.map": "/less-tipsy/static/js/runtime-main.cd25d2e4.js.map",
     "static/js/2.476f39e7.chunk.js": "/less-tipsy/static/js/2.476f39e7.chunk.js",
     "static/js/2.476f39e7.chunk.js.map": "/less-tipsy/static/js/2.476f39e7.chunk.js.map",
     "index.html": "/less-tipsy/index.html",
-    "precache-manifest.f322e161fb3426fe336bf93d78a1bbb0.js": "/less-tipsy/precache-manifest.f322e161fb3426fe336bf93d78a1bbb0.js",
+    "precache-manifest.a7ed6af44f96777f24a80b9d752693b8.js": "/less-tipsy/precache-manifest.a7ed6af44f96777f24a80b9d752693b8.js",
     "service-worker.js": "/less-tipsy/service-worker.js",
     "static/css/main.34c615ae.chunk.css.map": "/less-tipsy/static/css/main.34c615ae.chunk.css.map",
     "static/js/2.476f39e7.chunk.js.LICENSE.txt": "/less-tipsy/static/js/2.476f39e7.chunk.js.LICENSE.txt"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.cd25d2e4.js",
     "static/js/2.476f39e7.chunk.js",
     "static/css/main.34c615ae.chunk.css",
-    "static/js/main.e4864171.chunk.js"
+    "static/js/main.535ad2dc.chunk.js"
   ]
 }
