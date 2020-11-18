@@ -1,0 +1,21 @@
+{
+  "short_name": "Less Tipsy",
+  "name": "Less Tipsy",
+  "description": "A simple app for tracking alcohol consumption.",
+  "icons": [
+    {
+      "src": "beer192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "beer512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#AA6666",
+  "background_color": "#000000"
+}

@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/less-tipsy/static/css/main.cad24f63.chunk.css",
+    "main.js": "/less-tipsy/static/js/main.32495043.chunk.js",
+    "main.js.map": "/less-tipsy/static/js/main.32495043.chunk.js.map",
+    "runtime-main.js": "/less-tipsy/static/js/runtime-main.cd25d2e4.js",
+    "runtime-main.js.map": "/less-tipsy/static/js/runtime-main.cd25d2e4.js.map",
+    "static/js/2.c8e27f02.chunk.js": "/less-tipsy/static/js/2.c8e27f02.chunk.js",
+    "static/js/2.c8e27f02.chunk.js.map": "/less-tipsy/static/js/2.c8e27f02.chunk.js.map",
+    "index.html": "/less-tipsy/index.html",
+    "precache-manifest.3ea81781a473f2218a540c792f45828a.js": "/less-tipsy/precache-manifest.3ea81781a473f2218a540c792f45828a.js",
+    "service-worker.js": "/less-tipsy/service-worker.js",
+    "static/css/main.cad24f63.chunk.css.map": "/less-tipsy/static/css/main.cad24f63.chunk.css.map",
+    "static/js/2.c8e27f02.chunk.js.LICENSE.txt": "/less-tipsy/static/js/2.c8e27f02.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.cd25d2e4.js",
+    "static/js/2.c8e27f02.chunk.js",
+    "static/css/main.cad24f63.chunk.css",
+    "static/js/main.32495043.chunk.js"
+  ]
+}
