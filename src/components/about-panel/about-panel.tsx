@@ -17,6 +17,8 @@ export const AboutPanel: FunctionComponent = () => {
                 (.csv format) from the History tab and import in the History tab of the target browser/device.</p>
             <p>While this isn't as convenient as cloud storage, it allows you to own the data, and prevents selling, theft, or misuse of the data.</p>
         </div>
+        <p><strong>Author &amp; License</strong></p>
+        <p>This application was created by <a target="_blank" rel="noopener noreferrer" href="https://www.github.com/shaunlusk" title="Shaun Lusk">Shaun Lusk</a>. It is licensed under the MIT open source license (see LICENSE file in source code for more details).</p>
         <p><strong>Credits</strong></p>
         <p>
             Icon made by <a target="_blank" rel="noopener noreferrer" href="https://www.flaticon.com/authors/good-ware" title="Good Ware">Good Ware</a> from <a target="_blank" rel="noopener noreferrer" href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>

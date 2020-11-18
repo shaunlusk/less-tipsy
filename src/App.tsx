@@ -2,6 +2,7 @@ import React from 'react';
 import { MainPanel } from './components/main-panel/main-panel';
 import './App.scss';
 import { Initializer } from './services/initializer';
+import { version } from '../package.json';
 
 function App() {
   const initializer = new Initializer();
@@ -14,6 +15,7 @@ function App() {
         historyService={initializer.historyService}
         mainStateService={initializer.mainStateService}
         installService={initializer.installService}
+        version={version}
       />
     </div>
   );

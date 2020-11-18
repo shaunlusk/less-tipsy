@@ -84,6 +84,7 @@ export interface IMainPanelProps {
   historyService: HistoryService;
   mainStateService: MainStateService;
   installService: InstallService;
+  version: string;
 }
 
 class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
@@ -126,9 +127,7 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
   }
 
   public componentDidMount():void {
-    console.log('Component Did Mount.');
     this._installService.addDisplayModeSetListener(result => {
-      console.log('Display Mode set:', result);
       this.setState(prevState => {
         return {
           showInstallButton: result === DisplayMode.BROWSERTAB && prevState.installable,
@@ -137,7 +136,6 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
       });
     });
     this._installService.addInstallAvailableListener(() => {
-      console.log('Install Available');
       this.setState(prevState => {
         return {
           showInstallButton: prevState.displayMode === DisplayMode.BROWSERTAB,
@@ -145,7 +143,6 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
         };
       });
     });
-    eval('window.mainPanel = this');
   }
 
   private _promptForInstall(): void {
@@ -495,7 +492,7 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
             <img id="add-icon" alt="Add to Home Screen" src="./beer192.png"></img>
             <label htmlFor="add-icon">Add to Home Screen</label>
           </div>
-          :             <div>DEBUG: Installable? {this.state.installable?'isntallable':'not installable'}; DisplayMode: {this.state.displayMode}</div>}
+          : null}
         <Tabs activeTabLabel={this.state.activeTabLabel} activeTabChanged={this._changeTab.bind(this)}>
         {this.state.sessionState ? 
           <Tab label="Session">
@@ -581,6 +578,7 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
           <AboutPanel></AboutPanel>
         </Tab>
       </Tabs>
+        <div className="version">Version {this.props.version}</div>
       </div>}
     </React.Fragment>
   }

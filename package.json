@@ -1,6 +1,6 @@
 {
   "name": "less-tipsy",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "homepage": "https://shaunlusk.github.io/less-tipsy",
   "dependencies": {
@@ -10,6 +10,7 @@
     "@types/jest": "^26.0.8",
     "@types/lz-string": "^1.3.34",
     "bootstrap": "^4.5.0",
+    "gh-pages": "^3.1.0",
     "lz-string": "^1.4.4",
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
@@ -23,7 +24,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
