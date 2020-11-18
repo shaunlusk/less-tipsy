@@ -108,7 +108,6 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     this._history = this._loadHistory();
 
     this._lastTimeoutCheckTime = this._activeSession?.lastDrink?.time || new Date();
-    this._setCheckForTimeout();
 
     const viewedHowToTab = this._mainStateService.viewedHowToTab;
     this.state = {
@@ -119,7 +118,7 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
       showDeleteHistoryWarning: false,
       settingsState: this._getSettingsStateFromService(),
       showDisclaimer: !this._mainStateService.acceptedDisclaimer,
-      showTimeoutPrompt: this._passedTimeout(),
+      showTimeoutPrompt: false,
       showInstallButton: false,
       displayMode: DisplayMode.BROWSERTAB,
       installable: false
@@ -127,6 +126,7 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
   }
 
   public componentDidMount():void {
+    this._setCheckForTimeout();
     this._installService.addDisplayModeSetListener(result => {
       this.setState(prevState => {
         return {
@@ -151,6 +151,10 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     });
   }
 
+  private _setCheckForTimeout(): void {
+    setInterval(this._checkTimeForTimeout.bind(this), TIMEOUT_CHECK_INTERVAL);
+  }
+
   private _checkTimeForTimeout(): void {
     if (this._passedTimeout()) {
       this.setState({
@@ -160,12 +164,8 @@ class MainPanel extends React.Component<IMainPanelProps, IMainPanelState> {
     }
   }
 
-  private _setCheckForTimeout(): void {
-    setInterval(this._checkTimeForTimeout.bind(this), TIMEOUT_CHECK_INTERVAL);
-  }
-
   private _passedTimeout(): boolean {
-    if (!this._activeSession) {
+    if (!this.state.sessionState) {
       return false;
     }
     const currentTime = new Date();
