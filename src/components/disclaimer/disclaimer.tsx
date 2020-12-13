@@ -37,6 +37,7 @@ export class Disclaimer extends React.Component<IDisclaimerProps, IDisclaimerSta
         return (
             <div className="disclaimer-blackout">
                 <div className="disclaimer-main">
+                    <div className="disclaimer-content"><h4>Less-Tipsy is a simple app for tracking alcohol consumption.  Before continuing, you must agree to the terms and conditions below.</h4></div>
                     <h3>Terms and Conditions</h3>
                     <div className="disclaimer-content">
                         <p><strong>General</strong></p>
