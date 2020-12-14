@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "f70f4d56f6ed21b131a9770f9669b21a",
+    "revision": "9b1ae2c85ad6955ed024e1b728934f61",
     "url": "/less-tipsy/index.html"
   },
   {
-    "revision": "847b602ef60717a7751d",
+    "revision": "fafd55b91739d14cac3b",
     "url": "/less-tipsy/static/css/main.34c615ae.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/less-tipsy/static/js/2.476f39e7.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "847b602ef60717a7751d",
-    "url": "/less-tipsy/static/js/main.535ad2dc.chunk.js"
+    "revision": "fafd55b91739d14cac3b",
+    "url": "/less-tipsy/static/js/main.acca560d.chunk.js"
   },
   {
     "revision": "c6fc3b3fe17bc65b60f4",
